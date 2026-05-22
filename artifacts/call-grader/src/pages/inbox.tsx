@@ -69,13 +69,19 @@ export function InboxPage() {
     missed_after_hours: true,
   });
 
-  const applyPreset = (preset: "today" | "7d" | "30d" | "all") => {
+  const applyPreset = (preset: "today" | "yesterday" | "7d" | "30d" | "all") => {
     if (preset === "all") {
       setFrom("");
       setTo("");
       return;
     }
     const today = todayInDenver();
+    if (preset === "yesterday") {
+      const y = addDays(today, -1);
+      setFrom(y);
+      setTo(y);
+      return;
+    }
     setTo(today);
     setFrom(preset === "today" ? today : addDays(today, preset === "7d" ? -6 : -29));
   };
@@ -143,6 +149,7 @@ export function InboxPage() {
           </div>
           <div className="flex flex-wrap gap-1.5 pb-0.5">
             <Button type="button" variant="outline" size="sm" onClick={() => applyPreset("today")}>Today</Button>
+            <Button type="button" variant="outline" size="sm" onClick={() => applyPreset("yesterday")}>Yesterday</Button>
             <Button type="button" variant="outline" size="sm" onClick={() => applyPreset("7d")}>Last 7 days</Button>
             <Button type="button" variant="outline" size="sm" onClick={() => applyPreset("30d")}>Last 30 days</Button>
             <Button
