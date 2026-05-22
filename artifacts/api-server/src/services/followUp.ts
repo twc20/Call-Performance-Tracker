@@ -49,7 +49,7 @@ export async function refreshInboxForCall(callId: number): Promise<void> {
       .where(
         and(
           eq(inboxItems.callId, callId),
-          sql`${inboxItems.kind} IN ('missed_no_callback', 'missed_after_hours')`,
+          sql`${inboxItems.kind} IN ('missed_no_callback', 'missed_after_hours', 'missed_voicemail')`,
         ),
       );
     return;
@@ -62,13 +62,19 @@ export async function refreshInboxForCall(callId: number): Promise<void> {
       .where(
         and(
           eq(inboxItems.callId, callId),
-          sql`${inboxItems.kind} IN ('missed_no_callback', 'missed_after_hours')`,
+          sql`${inboxItems.kind} IN ('missed_no_callback', 'missed_after_hours', 'missed_voicemail')`,
         ),
       );
     return;
   }
 
-  const kind = call.isAfterHours ? "missed_after_hours" : "missed_no_callback";
+  // Voicemails are a stronger signal than a ring-and-hangup, so they get
+  // their own inbox kind regardless of after-hours.
+  const kind = call.isVoicemail
+    ? "missed_voicemail"
+    : call.isAfterHours
+      ? "missed_after_hours"
+      : "missed_no_callback";
 
   // Only consider missed-kind rows here. Shopper rows are owned exclusively
   // by syncShopperInboxAfterGrade and must not be mutated by ingest.
@@ -78,7 +84,7 @@ export async function refreshInboxForCall(callId: number): Promise<void> {
     .where(
       and(
         eq(inboxItems.callId, callId),
-        sql`${inboxItems.kind} IN ('missed_no_callback', 'missed_after_hours')`,
+        sql`${inboxItems.kind} IN ('missed_no_callback', 'missed_after_hours', 'missed_voicemail')`,
       ),
     )
     .limit(1);

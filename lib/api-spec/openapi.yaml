@@ -548,7 +548,7 @@ components:
       properties:
         id: { type: integer }
         callId: { type: integer }
-        kind: { type: string, enum: [shopper_no_followup, missed_no_callback, missed_after_hours] }
+        kind: { type: string, enum: [shopper_no_followup, missed_voicemail, missed_no_callback, missed_after_hours] }
         customerPhone: { type: string }
         customerName: { type: ["string", "null"] }
         store: { type: string }

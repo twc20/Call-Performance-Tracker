@@ -39,6 +39,11 @@ export const calls = pgTable(
     // True when the call arrived outside the receiving store's operating
     // hours (Mountain Time). Computed at ingest time from store + datetime.
     isAfterHours: boolean("is_after_hours").notNull().default(false),
+    // True for missed inbound calls where the caller left voicemail content
+    // (raw_transcript or transcript_lines non-empty). Drives the
+    // "missed_voicemail" inbox kind so the UI can distinguish a hot lead
+    // from a ring-and-hangup.
+    isVoicemail: boolean("is_voicemail").notNull().default(false),
     hasTranscript: integer("has_transcript").notNull().default(0),
     transcript: jsonb("transcript").$type<TranscriptLine[]>().notNull().default([]),
     summary: jsonb("summary").$type<string[]>().notNull().default([]),

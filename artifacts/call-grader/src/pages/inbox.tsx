@@ -34,7 +34,11 @@ function addDays(isoDate: string, days: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-type KindFilter = "shopper_no_followup" | "missed_no_callback" | "missed_after_hours";
+type KindFilter =
+  | "shopper_no_followup"
+  | "missed_voicemail"
+  | "missed_no_callback"
+  | "missed_after_hours";
 
 const FILTER_OPTIONS: Array<{
   key: KindFilter;
@@ -46,6 +50,12 @@ const FILTER_OPTIONS: Array<{
     key: "shopper_no_followup",
     label: "Missed Follow-ups",
     activeClass: "bg-primary text-primary-foreground border-primary",
+    inactiveClass: "bg-background text-muted-foreground border-border hover:text-foreground",
+  },
+  {
+    key: "missed_voicemail",
+    label: "Voicemails",
+    activeClass: "bg-purple-600 text-white border-purple-600 dark:bg-purple-500 dark:border-purple-500",
     inactiveClass: "bg-background text-muted-foreground border-border hover:text-foreground",
   },
   {
@@ -77,6 +87,7 @@ export function InboxPage() {
   const queryClient = useQueryClient();
   const [enabled, setEnabled] = useState<Record<KindFilter, boolean>>({
     shopper_no_followup: true,
+    missed_voicemail: true,
     missed_no_callback: true,
     missed_after_hours: true,
   });
@@ -292,9 +303,11 @@ function InboxCard({ item, onResolve }: { item: InboxItem; onResolve: () => void
   const label =
     item.kind === "shopper_no_followup"
       ? { text: "Missed Follow-up", className: "bg-primary/10 text-primary" }
-      : item.kind === "missed_after_hours"
-        ? { text: "Missed (After Hours)", className: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200" }
-        : { text: "Missed Call", className: "bg-destructive/10 text-destructive" };
+      : item.kind === "missed_voicemail"
+        ? { text: "Voicemail", className: "bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200" }
+        : item.kind === "missed_after_hours"
+          ? { text: "Missed (After Hours)", className: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200" }
+          : { text: "Missed Call", className: "bg-destructive/10 text-destructive" };
 
   return (
     <Link

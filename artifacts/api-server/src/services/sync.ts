@@ -120,6 +120,7 @@ async function upsertCall(parsed: ParsedCall, fileId: string, filePath: string):
     durationSeconds: parsed.durationSeconds,
     displayStatus: parsed.displayStatus,
     isAfterHours: parsed.isAfterHours,
+    isVoicemail: parsed.isVoicemail,
     hasTranscript: parsed.hasTranscript ? 1 : 0,
     transcript: parsed.transcript,
     summary: parsed.summary,

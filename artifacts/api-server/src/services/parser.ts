@@ -19,6 +19,7 @@ export interface ParsedCall {
   durationSeconds: number;
   displayStatus: string;
   isAfterHours: boolean;
+  isVoicemail: boolean;
   hasTranscript: boolean;
   transcript: TranscriptLine[];
   summary: string[];
@@ -312,12 +313,27 @@ export function parseCallJson(payload: unknown, filePath: string): ParsedCall | 
     displayStatus = "answered";
   }
 
-  const transcript = parseTranscript(
+  let transcript = parseTranscript(
     get(obj, "transcript_lines", "transcript", "transcription", "transcript_text", "lines"),
   );
+  // Voicemails come through with empty `transcript_lines` but a populated
+  // `raw_transcript` string. Promote raw_transcript to the transcript field
+  // so the grader has the caller's actual words to work with.
+  const rawTranscriptText = str(get(obj, "raw_transcript", "rawTranscript"));
+  if (transcript.length === 0 && rawTranscriptText) {
+    transcript = parseTranscript(rawTranscriptText);
+  }
   const summary = parseSummary(
     get(obj, "summary", "ai_summary", "aiSummary", "call_summary", "callSummary", "notes"),
   );
+
+  // Voicemail = inbound + missed + has some recorded content. Podium doesn't
+  // tag it as voicemail explicitly, so we infer from the presence of
+  // transcript content on an otherwise-missed inbound call.
+  const isVoicemail =
+    direction === "inbound" &&
+    displayStatus === "missed" &&
+    (transcript.length > 0 || (rawTranscriptText?.length ?? 0) > 0);
 
   const sourceUid =
     str(get(obj, "call_uid", "id", "call_id", "callId", "uid", "uuid", "external_id", "externalId", "recording_id", "recording_uid")) ??
@@ -336,6 +352,7 @@ export function parseCallJson(payload: unknown, filePath: string): ParsedCall | 
     durationSeconds,
     displayStatus,
     isAfterHours: isAfterHours(storeName, callDatetime),
+    isVoicemail,
     hasTranscript: transcript.length > 0,
     transcript,
     summary,
