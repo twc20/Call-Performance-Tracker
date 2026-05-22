@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { and, asc, desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 import { db, calls, callGrades, inboxItems } from "@workspace/db";
 import { ResolveInboxItemBody } from "@workspace/api-zod";
 
@@ -12,11 +12,10 @@ router.get("/inbox", async (req, res) => {
   if (req.query["date"]) filters.push(eq(inboxItems.callDate, String(req.query["date"])));
   if (req.query["store"]) filters.push(eq(calls.storeName, String(req.query["store"])));
 
-  // For the unresolved backlog, surface the OLDEST overdue items first — they're
-  // the most urgent. For resolved/all views, newest first.
+  // Newest first so today's misses surface at the top of the inbox.
   const order = includeResolved
     ? [desc(inboxItems.resolved), desc(calls.callDatetime)]
-    : [asc(calls.callDatetime)];
+    : [desc(calls.callDatetime)];
 
   const rows = await db
     .select({ item: inboxItems, call: calls, grade: callGrades })
