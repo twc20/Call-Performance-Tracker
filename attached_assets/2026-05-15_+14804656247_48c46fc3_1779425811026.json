@@ -1,0 +1,790 @@
+{
+  "customer_name_phone": "+14804656247",
+  "clean_customer_name": "+14804656247",
+  "call_type": "Inbound Call",
+  "call_date": "May 15, 2026",
+  "call_time": "12:42 PM",
+  "call_datetime_iso_utc": "2026-05-15T18:42:35.368964Z",
+  "timezone": "America/Denver",
+  "receiving_company": "Delta Tire - Eagar",
+  "brand": "delta",
+  "duration": "3:37",
+  "store_name": "Delta Tire - Eagar",
+  "answered_by": "Canon Eaves",
+  "summary": [
+    "Customer initially called to inquire about tire orders and mentioned finding a cheaper price at Discount Tire.",
+    "Business confirmed the price match at $317 but offered a further discount to $289.66 out the door for two tires.",
+    "Customer agreed to the new price and decided to cancel the order with Discount Tire.",
+    "Business provided information about nationwide coverage through Tire Pros and confirmed the final price.",
+    "Customer confirmed the appointment for Monday and ended the call."
+  ],
+  "transcript_lines": [
+    {
+      "speaker": "Customer",
+      "timestamp": "0:00",
+      "text": "Phone."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:01",
+      "text": "Just checking."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:02",
+      "text": "Oh"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:02",
+      "text": "Thanks."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:02",
+      "text": "Hi"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:02",
+      "text": "what else am I supposed to do ma'am?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:02",
+      "text": "I don't know."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:04",
+      "text": "Tory."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:05",
+      "text": "Transporting men by something."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:08",
+      "text": "Hello?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:14",
+      "text": "I'm just calling you to loop and not just go back to that."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:14",
+      "text": "That's Albuquerque."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:19",
+      "text": "Hello?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:19",
+      "text": "That's Albuquerque."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:19",
+      "text": "We wanna go This way."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:19",
+      "text": "And then cut over."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:19",
+      "text": "Which way?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:19",
+      "text": "I'll pitch you to 40."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:19",
+      "text": "Tanya let me get off."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:19",
+      "text": "We both got the phones going and we need to see where the hell we're going."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:19",
+      "text": "I'll call you back."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:19",
+      "text": "Alright."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:19",
+      "text": "Bye."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:19",
+      "text": "Bye."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:19",
+      "text": "This is where you go."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:19",
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:19",
+      "text": "And then you go right up here to the Hello?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:42",
+      "text": "Hello?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:42",
+      "text": "Did"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:45",
+      "text": "you call"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:45",
+      "text": "No."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:45",
+      "text": "me?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:45",
+      "text": "I called hello?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:47",
+      "text": "Hello."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:47",
+      "text": "This is the tire shop."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:47",
+      "text": "I just got a call from you."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:50",
+      "text": "Yes."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:50",
+      "text": "I'm sorry."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:50",
+      "text": "I meant to stay on the line with you but I got sidetracked."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:50",
+      "text": "Can I just order tires for Monday but I found them cheaper at discounts?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:50",
+      "text": "So are you able to"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:06",
+      "text": "cancel the order?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:08",
+      "text": "What price for the discount?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:11",
+      "text": "3 17."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:11",
+      "text": "And I'd"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:14",
+      "text": "3"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:14",
+      "text": "rather them"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:14",
+      "text": "cents."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:15",
+      "text": "have them at discount I'd rather have that them at discount tire because I hit there's 1 in the valley and if something happened to the tires like I wouldn't have to go up here"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:27",
+      "text": "That'd be 3 17"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:27",
+      "text": "to get"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:28",
+      "text": "before"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:28",
+      "text": "what"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:28",
+      "text": "their before their warranty."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:28",
+      "text": "Our warranty we have 700 locations in the United States."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:28",
+      "text": "They're tire pros."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:28",
+      "text": "So if you register you have the same coverage similar as discount."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:28",
+      "text": "My price is"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:40",
+      "text": "No."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:40",
+      "text": "the same."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:40",
+      "text": "They"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:40",
+      "text": "It's"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:40",
+      "text": "priced"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:40",
+      "text": "3 17."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:41",
+      "text": "me 3 17 out the door."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:43",
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:43",
+      "text": "Mine's mine's 3 17."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:43",
+      "text": "I was able to get a different tire on there."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:48",
+      "text": "You"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:48",
+      "text": "So"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:48",
+      "text": "just told me 3 50."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:50",
+      "text": "that was with taxes."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:50",
+      "text": "That was my I"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:52",
+      "text": "I'll"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:52",
+      "text": "was always"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:53",
+      "text": "even have"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:53",
+      "text": "trying"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:53",
+      "text": "discounts"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:53",
+      "text": "to overestimate"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:54",
+      "text": "on"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:54",
+      "text": "for"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:54",
+      "text": "the bills"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:54",
+      "text": "taxes."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:54",
+      "text": "in power."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:55",
+      "text": "I built a ticket."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:55",
+      "text": "It's 3 15 85."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:00",
+      "text": "It's I'll just stick to discount."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:03",
+      "text": "Is there a price I can be at?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:03",
+      "text": "Just because they're already ordered is there a price I can stick to just to get you in the door?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:11",
+      "text": "Honestly better than 300 would be awesome for 2 tires but no place is gonna do that."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:11",
+      "text": "So"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:16",
+      "text": "Well if I can"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:17",
+      "text": "2"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:17",
+      "text": "get if I can do out the door for 2 tires for 2 90 would you still come here for those on Monday?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:23",
+      "text": "90 out the door."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:23",
+      "text": "He said there's other locations."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:23",
+      "text": "Other locations."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:23",
+      "text": "Is there is there a location in the valley?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:31",
+      "text": "Yes."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:31",
+      "text": "So Tire Pros is they're 700 all around."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:31",
+      "text": "If you want the coverage nationwide it's a free registration and you're covered at all Tire Pros and they're nationwide."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:31",
+      "text": "If you just type in Tire Pros it'll give you the closest Tire Pros location to where you're at for your flasks"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:49",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:49",
+      "text": "and rotations and"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:49",
+      "text": "So you"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:50",
+      "text": "stuff."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:50",
+      "text": "said for 2 you can do it for 2 90 on Monday."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:50",
+      "text": "Out the"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:53",
+      "text": "Yep."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:53",
+      "text": "door."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:53",
+      "text": "Out the door."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:55",
+      "text": "Yep."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:55",
+      "text": "Let me give you a"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:56",
+      "text": "And"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:56",
+      "text": "total"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:56",
+      "text": "are"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:56",
+      "text": "price here."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:56",
+      "text": "there places"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:57",
+      "text": "3 90."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:57",
+      "text": "down in the valley?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:58",
+      "text": "Let me give you the cents."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:01",
+      "text": "I gotta put him on speaker so I can see where I'm"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:10",
+      "text": "tell me you're gonna run out."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "3:11",
+      "text": "It'd be 289 dollars and 66 cents."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:16",
+      "text": "And that's out the door."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:16",
+      "text": "Tax"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "3:19",
+      "text": "Yep."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:19",
+      "text": "and everything."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:19",
+      "text": "Tax and everything."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "3:22",
+      "text": "Yes ma'am."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:22",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:22",
+      "text": "Well then I will cancel a discount."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "3:28",
+      "text": "K."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "3:28",
+      "text": "I'll see you"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:28",
+      "text": "I can"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "3:29",
+      "text": "Monday"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:29",
+      "text": "call"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "3:29",
+      "text": "for"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:29",
+      "text": "you"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "3:29",
+      "text": "2"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:29",
+      "text": "at"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "3:29",
+      "text": "89."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:29",
+      "text": "the end of spring."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:29",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:29",
+      "text": "Thank you so much."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:29",
+      "text": "Soon as you get"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "3:32",
+      "text": "Yep."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:33",
+      "text": "in."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:33",
+      "text": "Alright."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "3:33",
+      "text": "Bye."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "3:35",
+      "text": "Bye."
+    }
+  ],
+  "raw_transcript": "",
+  "audio_file_mp3": "2026-05-15_+14804656247_48c46fc3.mp3",
+  "source_file": "Podium_Calls_May 15, 2026",
+  "call_uid": "48c46fc3-648f-4a81-b6e8-a416a5210d96",
+  "recording_uid": "9679be4b-b671-4ff2-89fa-b90852165c8d",
+  "location_uid": "01978a31-b569-73e8-9f8e-ea7677ba4a64",
+  "display_status": "ANSWERED",
+  "direction": "INBOUND",
+  "has_audio": true,
+  "has_recording": true,
+  "is_recorded": true,
+  "call_summary_available": true
+}

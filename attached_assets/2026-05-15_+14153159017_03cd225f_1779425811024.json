@@ -1,0 +1,1351 @@
+{
+  "customer_name_phone": "+14153159017",
+  "clean_customer_name": "+14153159017",
+  "call_type": "Inbound Call",
+  "call_date": "May 15, 2026",
+  "call_time": "10:06 AM",
+  "call_datetime_iso_utc": "2026-05-15T16:06:40.236157Z",
+  "timezone": "America/Denver",
+  "receiving_company": "Delta Tire - Grants",
+  "brand": "delta",
+  "duration": "15:44",
+  "store_name": "Delta Tire - Grants",
+  "answered_by": "Chris Sanchez",
+  "summary": [
+    "Customer called Delta Tire to inquire about services for a Ford F-150, including an oil change and wheel alignment.",
+    "Business confirmed the services and provided pricing: $82 for the oil change and $126 for the wheel alignment, both after tax.",
+    "Customer requested additional services, including a cooling exchange for $150 and a rear differential drain and fill for $170, requiring a VIN for accurate pricing.",
+    "Business advised booking an appointment for Wednesday afternoon to complete the services and confirmed availability.",
+    "Customer also inquired about brake fluid flush for $125 and tire rotation for $23, and Business confirmed availability for these services.",
+    "Customer planned to confirm with a friend and call back to finalize the appointment."
+  ],
+  "transcript_lines": [
+    {
+      "speaker": "Business",
+      "timestamp": "0:01",
+      "text": "Delta Tire."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:01",
+      "text": "This is Chris."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:02",
+      "text": "Hello."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:02",
+      "text": "Hi."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:02",
+      "text": "This is Chris."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:02",
+      "text": "Hi Chris."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:02",
+      "text": "My name is Gary."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:02",
+      "text": "I have a quick question."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:02",
+      "text": "Will you work on a oil change for a Ford f 1 50?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:12",
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:12",
+      "text": "For sure."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:13",
+      "text": "Yes."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:13",
+      "text": "It's good."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:13",
+      "text": "Perfect."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:13",
+      "text": "So I'm looking for an oil change and a wheel alignment."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:13",
+      "text": "So I'd like to know the pricing if you don't mind and I also like to know whether you're available for coming Wednesday or Thursday something?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:26",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:26",
+      "text": "Let's see."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:28",
+      "text": "What"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:28",
+      "text": "What year is that f"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:29",
+      "text": "year"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:29",
+      "text": "1 50?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:29",
+      "text": "is that?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:29",
+      "text": "2022."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:29",
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:29",
+      "text": "2022."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:33",
+      "text": "Gotcha."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:35",
+      "text": "3.5 I believe."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:35",
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:37",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:37",
+      "text": "3.5."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:37",
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:37",
+      "text": "Echo boost or something."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:39",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:39",
+      "text": "K."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:39",
+      "text": "So with"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:41",
+      "text": "So"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:41",
+      "text": "the"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:41",
+      "text": "with"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:41",
+      "text": "oil change"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:42",
+      "text": "the"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:42",
+      "text": "and"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:42",
+      "text": "oil"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:42",
+      "text": "the wheel"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:42",
+      "text": "change"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:43",
+      "text": "alignment"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:43",
+      "text": "and"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:43",
+      "text": "you're"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:43",
+      "text": "the"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:43",
+      "text": "looking"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:43",
+      "text": "oil"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:43",
+      "text": "at"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:43",
+      "text": "change"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:44",
+      "text": "about 2"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:44",
+      "text": "it looks"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:44",
+      "text": "0"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:44",
+      "text": "like"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:44",
+      "text": "6."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:44",
+      "text": "about 2 0 6."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:44",
+      "text": "2 0 6."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:44",
+      "text": "If you don't mind can I know the individual pricing?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:52",
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:52",
+      "text": "So the"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:52",
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:53",
+      "text": "oil change"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:53",
+      "text": "For"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:53",
+      "text": "was"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:53",
+      "text": "the"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:53",
+      "text": "about"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:53",
+      "text": "whole"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:53",
+      "text": "82"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:54",
+      "text": "thing"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:54",
+      "text": "dollars"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:54",
+      "text": "it's 83 dollars."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:54",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:56",
+      "text": "and the alignment's"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:56",
+      "text": "And"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:57",
+      "text": "about"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:57",
+      "text": "the"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:57",
+      "text": "1"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:57",
+      "text": "1"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:57",
+      "text": "26."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:57",
+      "text": "that's 1 26."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:57",
+      "text": "1 26."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:57",
+      "text": "And this 1 is before taxes."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:57",
+      "text": "Right?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:57",
+      "text": "Just to make sure."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:05",
+      "text": "It's after tax."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:07",
+      "text": "After tax that's good."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:07",
+      "text": "Ok."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:07",
+      "text": "And then how about the differential and the cool and flash will be around?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:07",
+      "text": "Since it's an"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:15",
+      "text": "K."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:15",
+      "text": "after tax I'm very interested."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:15",
+      "text": "I'm sorry to bother you but you know just checking"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:23",
+      "text": "No."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:23",
+      "text": "You're"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:23",
+      "text": "Chris."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "2:24",
+      "text": "good."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:24",
+      "text": "No."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "2:24",
+      "text": "You too."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "5:33",
+      "text": "K."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "5:33",
+      "text": "So the cooling exchange you're looking at about 1 50."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "5:33",
+      "text": "As far as the rear differential drain and fill I would need a a VIN in order to get an accurate pricing."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:44",
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:44",
+      "text": "Sure."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:44",
+      "text": "I mean Chris if you're not busy that much I can provide you."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:44",
+      "text": "If you give me 1 moment."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "5:51",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "Ah perfect."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "That will be great."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "1 second Ben."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "1 second."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "Hey."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "We need a Chris."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "I'm with him."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "Give me the VIN number."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "Where do you keep it?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "Why here?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "I told I want this."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "Perfect."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "Hi Chris."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "You're with me."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "5:52",
+      "text": "Right?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "6:20",
+      "text": "Yes sir."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "6:20",
+      "text": "Perfect."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "6:20",
+      "text": "So I have my VIN number with me."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "6:20",
+      "text": "Let me know when you're ready."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "6:25",
+      "text": "I'm ready for it."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "6:27",
+      "text": "Perfect."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "6:27",
+      "text": "So it's number 1"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "6:31",
+      "text": "K."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "6:31",
+      "text": "like f as in Frank"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "6:34",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "6:35",
+      "text": "t as in telephone"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "6:37",
+      "text": "Ok."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "6:38",
+      "text": "e as in egg"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "6:42",
+      "text": "w as in whiskey"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "6:46",
+      "text": "number 1"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "6:49",
+      "text": "K."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "6:50",
+      "text": "c as in Charles"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "6:52",
+      "text": "K."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "6:54",
+      "text": "p as in pepper"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "6:56",
+      "text": "Gotcha."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "6:58",
+      "text": "x like you know x what do say?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "6:58",
+      "text": "Like X-ray."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "6:58",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "6:58",
+      "text": "X-ray."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "6:58",
+      "text": "And n like in November"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "7:07",
+      "text": "Can you"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "7:07",
+      "text": "k"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "7:07",
+      "text": "say that 1"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "7:07",
+      "text": "like"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "7:07",
+      "text": "more time?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "7:07",
+      "text": "in kite n n like in November."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "7:11",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "7:12",
+      "text": "K k like in kite"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "7:17",
+      "text": "e as in egg"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "7:21",
+      "text": "5 9"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "7:24",
+      "text": "4 0 6."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "7:24",
+      "text": "0 4 0"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "7:28",
+      "text": "Gotcha."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "7:29",
+      "text": "6."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "7:55",
+      "text": "Yes."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "7:57",
+      "text": "So you got it."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "7:57",
+      "text": "Right?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "7:57",
+      "text": "I mean just checking."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "7:57",
+      "text": "Perfect."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "8:00",
+      "text": "I got it."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "8:01",
+      "text": "And"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "8:08",
+      "text": "on the meanwhile Chris just you know just checking whether if I came over here by around Wednesday afternoon if I keep the vehicle over there around 2 to 3 hours you can able to complete everything."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "8:08",
+      "text": "Right?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "8:08",
+      "text": "Or should I book an appointment?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "8:24",
+      "text": "Probably best to book an appointment."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "8:26",
+      "text": "Mhmm."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "8:26",
+      "text": "Got it."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "8:26",
+      "text": "Got it."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "13:12",
+      "text": "K."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "13:12",
+      "text": "So that rear differential you're looking at about 1 70."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "13:19",
+      "text": "1 70."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "13:19",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "13:19",
+      "text": "That might cost around 3 to 4 course of oil."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "13:19",
+      "text": "I mean just checking how much like"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "13:31",
+      "text": "I'm sorry."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "13:31",
+      "text": "Can you repeat that?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "13:33",
+      "text": "okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "13:33",
+      "text": "So will that take care?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "13:33",
+      "text": "This is a little bit costly."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "13:33",
+      "text": "That's what I'm worried about."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "13:33",
+      "text": "1 70."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "13:33",
+      "text": "And you know just want to check whether you will check about the brake fluid and everything."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "13:48",
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "13:51",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "13:51",
+      "text": "In case now Chris I'm just really asking very frankly over here."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "13:51",
+      "text": "So in case if the brake fluid is low we can able to refill it Because I feel like you know something is missing when we applying the brakes."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "13:51",
+      "text": "So we can check that 1 or what you suggest that we need to flash it out and refill it?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "13:51",
+      "text": "What you feel like if since I never been done the break fluid recently like from the fresh in bus."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "13:51",
+      "text": "2022"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "14:20",
+      "text": "Mhmm."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:20",
+      "text": "itself it's been there."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:20",
+      "text": "So what do you think?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:20",
+      "text": "I mean you I just was asking about a suggestion."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "14:26",
+      "text": "And we can definitely check it."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "14:26",
+      "text": "If it needs the more brake fluid we can do a flush on it and the flush is about 1 25."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:33",
+      "text": "Flash is 1 25 then let's go for a flash because I don't feel no."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:33",
+      "text": "Break is very safety thing."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:33",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:33",
+      "text": "And 1 more question."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:33",
+      "text": "We will do our work this 1."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:33",
+      "text": "Tire rotation."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:33",
+      "text": "Right?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:33",
+      "text": "I do have a spare tires."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:33",
+      "text": "I bought a new 1 too."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "14:54",
+      "text": "So you"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:54",
+      "text": "Chris"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "14:54",
+      "text": "want a"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:55",
+      "text": "you're"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "14:55",
+      "text": "new"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:55",
+      "text": "with"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "14:55",
+      "text": "spare"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:55",
+      "text": "me."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "14:55",
+      "text": "tire?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:55",
+      "text": "Right?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:55",
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "14:56",
+      "text": "Yep."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:56",
+      "text": "I do have I have a spare tire."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "14:56",
+      "text": "So I just checking like you know we can able to do a tire rotation you know applying the new"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "15:03",
+      "text": "Yep."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:03",
+      "text": "tires."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "15:04",
+      "text": "Yep."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "15:04",
+      "text": "The tire rotation's about"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:05",
+      "text": "23"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "15:06",
+      "text": "23 dollars."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:08",
+      "text": "dollars."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:08",
+      "text": "That is fair enough."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:08",
+      "text": "And the last last question is like oncoming Wednesday is any slots available for 12 o'clock or 1 o'clock?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:08",
+      "text": "Don't book right now."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:08",
+      "text": "I just want to check whether you have any time slots available or not."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "15:20",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "15:20",
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "15:20",
+      "text": "We got some time slots open then."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:24",
+      "text": "Perfect."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:24",
+      "text": "So I'll just check with 1 of my friend and I will get back to you."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:24",
+      "text": "Your name is Chris."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:24",
+      "text": "Right?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:24",
+      "text": "You will be there on the store."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:24",
+      "text": "Right?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "15:32",
+      "text": "Yes."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "15:32",
+      "text": "I'll be here."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:34",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:34",
+      "text": "So just give give me 5 minutes max."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:34",
+      "text": "I will call you back."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "15:39",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "15:39",
+      "text": "Sounds good."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:40",
+      "text": "Perfect."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:40",
+      "text": "Thank you Chris."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "15:40",
+      "text": "Bye bye."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "15:42",
+      "text": "Yep."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "15:42",
+      "text": "Bye."
+    }
+  ],
+  "raw_transcript": "",
+  "audio_file_mp3": "2026-05-15_+14153159017_03cd225f.mp3",
+  "source_file": "Podium_Calls_May 15, 2026",
+  "call_uid": "03cd225f-80bd-41bb-acc5-a0902144d622",
+  "recording_uid": "d624be33-5c64-4dcd-b70b-702209e6417d",
+  "location_uid": "81c7c326-d2b2-5a29-ae65-6bc3b25c3363",
+  "display_status": "ANSWERED",
+  "direction": "INBOUND",
+  "has_audio": true,
+  "has_recording": true,
+  "is_recorded": true,
+  "call_summary_available": true
+}

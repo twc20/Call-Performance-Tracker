@@ -1,0 +1,139 @@
+{
+  "customer_name_phone": "+12253727412",
+  "clean_customer_name": "+12253727412",
+  "call_type": "Inbound Call",
+  "call_date": "May 15, 2026",
+  "call_time": "8:37 AM",
+  "call_datetime_iso_utc": "2026-05-15T14:37:20.632669Z",
+  "timezone": "America/Denver",
+  "receiving_company": "Delta Tire - Gallup",
+  "brand": "delta",
+  "duration": "0:53",
+  "store_name": "Delta Tire - Gallup",
+  "answered_by": "Unknown",
+  "summary": [
+    "Customer called seeking to reach employee Nelson Tom Junior.",
+    "Business informed customer that Nelson Tom Junior is not available.",
+    "Customer requested Business to relay a message for Nelson to call Deborah at MyQuickWallet with provided contact details.",
+    "Business agreed to pass on the message."
+  ],
+  "transcript_lines": [
+    {
+      "speaker": "Business",
+      "timestamp": "0:00",
+      "text": "Hello."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:00",
+      "text": "Thanks for calling How may I help you?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:04",
+      "text": "Hi."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:04",
+      "text": "Good day."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:04",
+      "text": "I'm looking to reach an an employee Nelson Tom junior."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:13",
+      "text": "I don't believe that these here."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:17",
+      "text": "Oh he's not in today?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:19",
+      "text": "No."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:20",
+      "text": "Alright then."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:20",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:20",
+      "text": "Thanks so much."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:20",
+      "text": "Oh can you give him a message for me?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:25",
+      "text": "Sure."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:26",
+      "text": "Or can you tell him to call Deborah"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:30",
+      "text": "at MyQuickWallet?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:30",
+      "text": "8 5 5 6 7 9 5 9 5 0 extension 5 1 9."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:45",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:46",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:46",
+      "text": "Thank you so much."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:48",
+      "text": "Thank you."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:48",
+      "text": "Everyone."
+    }
+  ],
+  "raw_transcript": "",
+  "audio_file_mp3": "2026-05-15_+12253727412_cf3ccc6e.mp3",
+  "source_file": "Podium_Calls_May 15, 2026",
+  "call_uid": "cf3ccc6e-e0fe-4f78-b7a0-eacdb8e2b3a2",
+  "recording_uid": "b843d207-fd14-44e1-aeab-8187ae5612ec",
+  "location_uid": "6ecd67fd-e28a-5c95-9c1d-e8bd132915b9",
+  "display_status": "ANSWERED",
+  "direction": "INBOUND",
+  "has_audio": true,
+  "has_recording": true,
+  "is_recorded": true,
+  "call_summary_available": true
+}

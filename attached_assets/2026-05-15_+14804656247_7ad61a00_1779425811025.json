@@ -1,0 +1,359 @@
+{
+  "customer_name_phone": "+14804656247",
+  "clean_customer_name": "+14804656247",
+  "call_type": "Inbound Call",
+  "call_date": "May 15, 2026",
+  "call_time": "11:59 AM",
+  "call_datetime_iso_utc": "2026-05-15T17:59:15.949241Z",
+  "timezone": "America/Denver",
+  "receiving_company": "Delta Tire - Grants",
+  "brand": "delta",
+  "duration": "1:12",
+  "store_name": "Delta Tire - Grants",
+  "answered_by": "Chris Sanchez",
+  "summary": [
+    "Customer inquired about a cheap tire for their car, specifying the size as 265/60 R18.",
+    "Business confirmed the cheapest tire option in stock is priced at $180, including tax and labor.",
+    "Customer mentioned previous interactions with other suppliers and expressed a preference for not having tires shipped.",
+    "Business provided information on the tire availability and pricing, and the call concluded with the customer thanking the business."
+  ],
+  "transcript_lines": [
+    {
+      "speaker": "Customer",
+      "timestamp": "0:00",
+      "text": "Hi."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:01",
+      "text": "Delta Tire."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:01",
+      "text": "This is Chris."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:04",
+      "text": "I was calling to see if you guys have a cheap tire in stock for my car."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:10",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:10",
+      "text": "Do you know the size of the tire?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:12",
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:12",
+      "text": "It's 2 65 6 g r 18."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:12",
+      "text": "Oh god."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:12",
+      "text": "I don't care."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:12",
+      "text": "You got it?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:12",
+      "text": "Hello?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:12",
+      "text": "Hey."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:12",
+      "text": "What?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:12",
+      "text": "I called the guy at Star and showed a Walmart system stuff as well."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:12",
+      "text": "But he took it up."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:12",
+      "text": "He said 2 65 60 part eighteenth or 91 0 6 a piece."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:12",
+      "text": "They got a 50000 mile warranty on them."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:12",
+      "text": "They're called Salamo Prevail."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:12",
+      "text": "I'm just gonna be 2"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:45",
+      "text": "Let's"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:45",
+      "text": "25."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:45",
+      "text": "see."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:46",
+      "text": "That's just well if they order they're in New Mexico they order them there and then they shipped to show them."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:46",
+      "text": "Well I don't know if they're knocked out."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:46",
+      "text": "We're coming back."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:54",
+      "text": "Let's"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:55",
+      "text": "We don't want anything"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:55",
+      "text": "see."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:55",
+      "text": "shipped here."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:55",
+      "text": "I I arrived"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:57",
+      "text": "The"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:57",
+      "text": "here."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:57",
+      "text": "That's what I"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:58",
+      "text": "cheapest"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:58",
+      "text": "said."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:58",
+      "text": "Solo."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:59",
+      "text": "option we have"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:59",
+      "text": "Oh."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:59",
+      "text": "in stock is"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:00",
+      "text": "You've"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:00",
+      "text": "about"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:00",
+      "text": "had a"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:00",
+      "text": "1"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:01",
+      "text": "driver of"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:01",
+      "text": "80."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:01",
+      "text": "Solo."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:01",
+      "text": "Wasn't a long time."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:01",
+      "text": "Her tire?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:04",
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:05",
+      "text": "She's"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:05",
+      "text": "And"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:05",
+      "text": "on"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:05",
+      "text": "includes"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:06",
+      "text": "with the"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:06",
+      "text": "tax"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:06",
+      "text": "Walmart"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:07",
+      "text": "and labor."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:07",
+      "text": "here."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:07",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:07",
+      "text": "Thank you."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:10",
+      "text": "Yep."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:10",
+      "text": "Bye."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "1:10",
+      "text": "No problem."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "1:11",
+      "text": "How much."
+    }
+  ],
+  "raw_transcript": "",
+  "audio_file_mp3": "2026-05-15_+14804656247_7ad61a00.mp3",
+  "source_file": "Podium_Calls_May 15, 2026",
+  "call_uid": "7ad61a00-250b-43ac-96c5-af2013326c25",
+  "recording_uid": "c925a3ee-a8c9-43f2-afcc-4cac3827e570",
+  "location_uid": "81c7c326-d2b2-5a29-ae65-6bc3b25c3363",
+  "display_status": "ANSWERED",
+  "direction": "INBOUND",
+  "has_audio": true,
+  "has_recording": true,
+  "is_recorded": true,
+  "call_summary_available": true
+}
