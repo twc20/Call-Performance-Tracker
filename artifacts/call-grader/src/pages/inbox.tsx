@@ -77,13 +77,22 @@ function InboxCard({ item, onResolve }: { item: InboxItem; onResolve: () => void
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
             <div className="text-sm font-medium flex items-center gap-2">
-              <Phone className="w-4 h-4 text-muted-foreground" />
-              {item.customerPhone}
+              {item.customerName ? (
+                <>
+                  <User className="w-4 h-4 text-muted-foreground" />
+                  {item.customerName}
+                </>
+              ) : (
+                <>
+                  <Phone className="w-4 h-4 text-muted-foreground" />
+                  {item.customerPhone !== "unknown" ? item.customerPhone : "Unknown caller"}
+                </>
+              )}
             </div>
-            {item.customerName && (
+            {item.customerName && item.customerPhone !== "unknown" && (
               <div className="text-sm text-muted-foreground flex items-center gap-2">
-                <User className="w-4 h-4" />
-                {item.customerName}
+                <Phone className="w-4 h-4" />
+                {item.customerPhone}
               </div>
             )}
           </div>

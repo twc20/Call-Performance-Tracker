@@ -118,8 +118,12 @@ export function CallsPage() {
                       )}
                     </td>
                     <td className="px-4 py-3">
-                      <div className="font-medium">{call.customerPhone}</div>
-                      {call.customerName && <div className="text-xs text-muted-foreground">{call.customerName}</div>}
+                      <div className="font-medium">
+                        {call.customerName ?? (call.customerPhone !== "unknown" ? call.customerPhone : "Unknown")}
+                      </div>
+                      {call.customerName && call.customerPhone !== "unknown" && (
+                        <div className="text-xs text-muted-foreground">{call.customerPhone}</div>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">{call.store}</td>
                     <td className="px-4 py-3 text-muted-foreground">{call.employee || "-"}</td>
