@@ -108,7 +108,7 @@ async function upsertCall(parsed: ParsedCall, fileId: string, filePath: string):
     customerName: parsed.customerName,
     direction: parsed.direction,
     callDatetime: parsed.callDatetime,
-    callDate: dateOnly(parsed.callDatetime),
+    callDate: parsed.callDate ?? dateOnly(parsed.callDatetime),
     durationSeconds: parsed.durationSeconds,
     displayStatus: parsed.displayStatus,
     hasTranscript: parsed.hasTranscript ? 1 : 0,

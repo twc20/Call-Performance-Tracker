@@ -14,6 +14,7 @@ export interface ParsedCall {
   customerName: string | null;
   direction: "inbound" | "outbound";
   callDatetime: Date;
+  callDate: string | null;
   durationSeconds: number;
   displayStatus: string;
   hasTranscript: boolean;
@@ -74,6 +75,23 @@ function parseDuration(v: unknown): number {
     if (Number.isFinite(n)) return Math.max(0, Math.round(n));
   }
   return 0;
+}
+
+// Parse Podium's "call_date" string ("May 21, 2026") into a YYYY-MM-DD string.
+// Returns null if unparseable so the caller can fall back to deriving from the
+// UTC timestamp.
+function parseCallDate(s: string | null): string | null {
+  if (!s) return null;
+  // Try ISO YYYY-MM-DD first
+  const iso = /^(\d{4})-(\d{2})-(\d{2})/.exec(s);
+  if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
+  const d = new Date(s);
+  if (isNaN(d.getTime())) return null;
+  // Format in UTC to avoid the local-TZ shifting a date-only string.
+  const y = d.getUTCFullYear();
+  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(d.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
 
 function parseDate(v: unknown): Date {
@@ -260,6 +278,11 @@ export function parseCallJson(payload: unknown, filePath: string): ParsedCall | 
     ),
   );
 
+  // Prefer the JSON's own `call_date` field ("May 21, 2026") — it's already in
+  // the store's local day. Falls back to deriving from the UTC timestamp in
+  // sync.ts when this field is missing.
+  const callDate = parseCallDate(str(get(obj, "call_date")));
+
   const durationSeconds = parseDuration(
     get(obj, "duration", "duration_seconds", "durationSeconds", "talk_time", "talkTime", "length"),
   );
@@ -307,6 +330,7 @@ export function parseCallJson(payload: unknown, filePath: string): ParsedCall | 
     customerName,
     direction,
     callDatetime,
+    callDate,
     durationSeconds,
     displayStatus,
     hasTranscript: transcript.length > 0,
