@@ -9,4 +9,5 @@
 export type GetLeaderboardParams = {
 from?: Date;
 to?: Date;
+store?: string;
 };

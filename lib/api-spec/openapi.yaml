@@ -243,7 +243,13 @@ paths:
       parameters:
         - in: query
           name: days
-          schema: { type: integer, default: 30, maximum: 180 }
+          schema: { type: integer, default: 30, maximum: 365 }
+        - in: query
+          name: from
+          schema: { type: string, format: date }
+        - in: query
+          name: to
+          schema: { type: string, format: date }
         - in: query
           name: store
           schema: { type: string }
@@ -268,6 +274,9 @@ paths:
         - in: query
           name: to
           schema: { type: string, format: date }
+        - in: query
+          name: store
+          schema: { type: string }
       responses:
         "200":
           description: OK

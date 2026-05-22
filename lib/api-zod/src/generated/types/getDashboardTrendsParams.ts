@@ -8,8 +8,10 @@
 
 export type GetDashboardTrendsParams = {
 /**
- * @maximum 180
+ * @maximum 365
  */
 days?: number;
+from?: Date;
+to?: Date;
 store?: string;
 };

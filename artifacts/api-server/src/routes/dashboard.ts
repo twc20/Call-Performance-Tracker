@@ -81,7 +81,11 @@ router.get("/dashboard/summary", async (req, res) => {
 });
 
 router.get("/dashboard/trends", async (req, res) => {
-  const days = Math.min(Number(req.query["days"] ?? 30), 180);
+  const from = req.query["from"] ? String(req.query["from"]) : null;
+  const to = req.query["to"] ? String(req.query["to"]) : null;
+  // Backwards-compatible: if no explicit range is given, fall back to the
+  // rolling `days` window (default 30) so existing callers keep working.
+  const days = from || to ? null : Math.min(Number(req.query["days"] ?? 30), 365);
   const store = req.query["store"] ? String(req.query["store"]) : null;
   const rows = await db.execute(sql`
     SELECT
@@ -95,7 +99,10 @@ router.get("/dashboard/trends", async (req, res) => {
       AVG(g.overall_score)::float AS "averageGrade"
     FROM calls c
     LEFT JOIN call_grades g ON g.call_id = c.id
-    WHERE c.call_datetime >= NOW() - (${days} || ' days')::interval
+    WHERE 1=1
+      ${days != null ? sql`AND c.call_datetime >= NOW() - (${days} || ' days')::interval` : sql``}
+      ${from ? sql`AND c.call_date >= ${from}` : sql``}
+      ${to ? sql`AND c.call_date <= ${to}` : sql``}
       ${store ? sql`AND c.store_name = ${store}` : sql``}
     GROUP BY c.call_date
     ORDER BY c.call_date ASC
@@ -106,6 +113,7 @@ router.get("/dashboard/trends", async (req, res) => {
 router.get("/dashboard/leaderboard", async (req, res) => {
   const from = req.query["from"] ? String(req.query["from"]) : null;
   const to = req.query["to"] ? String(req.query["to"]) : null;
+  const store = req.query["store"] ? String(req.query["store"]) : null;
   const rows = await db.execute(sql`
     SELECT
       c.employee_name AS employee,
@@ -118,6 +126,7 @@ router.get("/dashboard/leaderboard", async (req, res) => {
     WHERE c.employee_name IS NOT NULL
       ${from ? sql`AND c.call_date >= ${from}` : sql``}
       ${to ? sql`AND c.call_date <= ${to}` : sql``}
+      ${store ? sql`AND c.store_name = ${store}` : sql``}
     GROUP BY c.employee_name
     HAVING SUM(CASE WHEN g.id IS NOT NULL THEN 1 ELSE 0 END) > 0
     ORDER BY "averageGrade" DESC NULLS LAST

@@ -321,12 +321,14 @@ export const GetDashboardSummaryResponse = zod.object({
  * @summary Daily call volume and grade trends
  */
 export const getDashboardTrendsQueryDaysDefault = 30;
-export const getDashboardTrendsQueryDaysMax = 180;
+export const getDashboardTrendsQueryDaysMax = 365;
 
 
 
 export const GetDashboardTrendsQueryParams = zod.object({
   "days": zod.coerce.number().max(getDashboardTrendsQueryDaysMax).default(getDashboardTrendsQueryDaysDefault),
+  "from": zod.date().optional(),
+  "to": zod.date().optional(),
   "store": zod.coerce.string().optional()
 })
 
@@ -348,7 +350,8 @@ export const GetDashboardTrendsResponse = zod.array(GetDashboardTrendsResponseIt
  */
 export const GetLeaderboardQueryParams = zod.object({
   "from": zod.date().optional(),
-  "to": zod.date().optional()
+  "to": zod.date().optional(),
+  "store": zod.coerce.string().optional()
 })
 
 export const GetLeaderboardResponseItem = zod.object({

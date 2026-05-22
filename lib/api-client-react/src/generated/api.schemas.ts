@@ -392,15 +392,18 @@ store?: string;
 
 export type GetDashboardTrendsParams = {
 /**
- * @maximum 180
+ * @maximum 365
  */
 days?: number;
+from?: string;
+to?: string;
 store?: string;
 };
 
 export type GetLeaderboardParams = {
 from?: string;
 to?: string;
+store?: string;
 };
 
 export type GetStoreBreakdownParams = {
