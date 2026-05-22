@@ -156,7 +156,7 @@ export function CallsPage() {
         {data && data.total > limit && (
           <div className="p-4 border-t flex items-center justify-between">
             <div className="text-sm text-muted-foreground">
-              Showing {page * limit + 1} to Math.min((page + 1) * limit, data.total) of {data.total}
+              Showing {page * limit + 1} to {Math.min((page + 1) * limit, data.total)} of {data.total}
             </div>
             <div className="flex gap-2">
               <Button 
