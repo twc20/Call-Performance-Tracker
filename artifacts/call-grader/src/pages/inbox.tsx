@@ -6,12 +6,54 @@ import { format } from "date-fns";
 import { Phone, User, Store, CheckCircle, Clock, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "wouter";
+import { useState, useMemo } from "react";
 import { EmptyState } from "@/components/empty-state";
+
+type KindFilter = "shopper_no_followup" | "missed_no_callback" | "missed_after_hours";
+
+const FILTER_OPTIONS: Array<{
+  key: KindFilter;
+  label: string;
+  activeClass: string;
+  inactiveClass: string;
+}> = [
+  {
+    key: "shopper_no_followup",
+    label: "Missed Follow-ups",
+    activeClass: "bg-primary text-primary-foreground border-primary",
+    inactiveClass: "bg-background text-muted-foreground border-border hover:text-foreground",
+  },
+  {
+    key: "missed_no_callback",
+    label: "Missed (Open Hours)",
+    activeClass: "bg-destructive text-destructive-foreground border-destructive",
+    inactiveClass: "bg-background text-muted-foreground border-border hover:text-foreground",
+  },
+  {
+    key: "missed_after_hours",
+    label: "Missed (After Hours)",
+    activeClass: "bg-amber-500 text-white border-amber-500 dark:bg-amber-600 dark:border-amber-600",
+    inactiveClass: "bg-background text-muted-foreground border-border hover:text-foreground",
+  },
+];
 
 export function InboxPage() {
   const { data: items, isLoading, error } = useGetInbox({ includeResolved: false });
   const resolve = useResolveInboxItem();
   const queryClient = useQueryClient();
+  const [enabled, setEnabled] = useState<Record<KindFilter, boolean>>({
+    shopper_no_followup: true,
+    missed_no_callback: true,
+    missed_after_hours: true,
+  });
+
+  const toggle = (k: KindFilter) =>
+    setEnabled((prev) => ({ ...prev, [k]: !prev[k] }));
+
+  const filtered = useMemo(
+    () => (items ?? []).filter((i) => enabled[i.kind as KindFilter] ?? true),
+    [items, enabled],
+  );
 
   if (isLoading) return <div className="p-8">Loading inbox...</div>;
   if (error) return <div className="p-8 text-destructive">Error loading inbox</div>;
@@ -40,6 +82,11 @@ export function InboxPage() {
     }
   };
 
+  const counts = items.reduce<Record<string, number>>((acc, i) => {
+    acc[i.kind] = (acc[i.kind] ?? 0) + 1;
+    return acc;
+  }, {});
+
   return (
     <div className="p-8 max-w-5xl mx-auto space-y-6">
       <div>
@@ -49,12 +96,45 @@ export function InboxPage() {
         </p>
       </div>
 
+      <div className="flex flex-wrap items-center gap-2">
+        {FILTER_OPTIONS.map((opt) => {
+          const isOn = enabled[opt.key];
+          const count = counts[opt.key] ?? 0;
+          return (
+            <button
+              key={opt.key}
+              type="button"
+              onClick={() => toggle(opt.key)}
+              aria-pressed={isOn}
+              className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-medium transition-colors ${
+                isOn ? opt.activeClass : opt.inactiveClass
+              }`}
+            >
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  isOn ? "bg-current opacity-80" : "border border-current"
+                }`}
+              />
+              {opt.label}
+              <span className={`tabular-nums ${isOn ? "opacity-90" : "opacity-70"}`}>
+                {count}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
       <p className="text-xs text-muted-foreground">
-        Showing {items.length} unresolved {items.length === 1 ? "item" : "items"}, oldest first.
+        Showing {filtered.length} of {items.length} unresolved {items.length === 1 ? "item" : "items"}, newest first.
       </p>
 
+      {filtered.length === 0 ? (
+        <div className="p-8 text-center text-sm text-muted-foreground border rounded-lg bg-card">
+          No items match the selected filters. Toggle a category above to see more.
+        </div>
+      ) : (
       <div className="space-y-8">
-        {groupByDate(items).map(([date, group]) => (
+        {groupByDate(filtered).map(([date, group]) => (
           <section key={date} className="space-y-3">
             <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               {format(new Date(date + "T12:00:00"), "EEEE, MMM d, yyyy")}
@@ -68,6 +148,7 @@ export function InboxPage() {
           </section>
         ))}
       </div>
+      )}
     </div>
   );
 }
