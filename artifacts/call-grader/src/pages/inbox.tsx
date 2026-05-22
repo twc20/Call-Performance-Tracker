@@ -7,7 +7,23 @@ import { Phone, User, Store, CheckCircle, Clock, ChevronRight } from "lucide-rea
 import { toast } from "sonner";
 import { Link } from "wouter";
 import { useState, useMemo } from "react";
+import { Input } from "@/components/ui/input";
 import { EmptyState } from "@/components/empty-state";
+
+function todayInDenver(): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Denver",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+}
+
+function addDays(isoDate: string, days: number): string {
+  const d = new Date(isoDate + "T12:00:00Z");
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+}
 
 type KindFilter = "shopper_no_followup" | "missed_no_callback" | "missed_after_hours";
 
@@ -38,7 +54,13 @@ const FILTER_OPTIONS: Array<{
 ];
 
 export function InboxPage() {
-  const { data: items, isLoading, error } = useGetInbox({ includeResolved: false });
+  const [from, setFrom] = useState<string>("");
+  const [to, setTo] = useState<string>("");
+  const { data: items, isLoading, error } = useGetInbox({
+    includeResolved: false,
+    ...(from ? { from } : {}),
+    ...(to ? { to } : {}),
+  });
   const resolve = useResolveInboxItem();
   const queryClient = useQueryClient();
   const [enabled, setEnabled] = useState<Record<KindFilter, boolean>>({
@@ -46,6 +68,17 @@ export function InboxPage() {
     missed_no_callback: true,
     missed_after_hours: true,
   });
+
+  const applyPreset = (preset: "today" | "7d" | "30d" | "all") => {
+    if (preset === "all") {
+      setFrom("");
+      setTo("");
+      return;
+    }
+    const today = todayInDenver();
+    setTo(today);
+    setFrom(preset === "today" ? today : addDays(today, preset === "7d" ? -6 : -29));
+  };
 
   const toggle = (k: KindFilter) =>
     setEnabled((prev) => ({ ...prev, [k]: !prev[k] }));
@@ -55,22 +88,7 @@ export function InboxPage() {
     [items, enabled],
   );
 
-  if (isLoading) return <div className="p-8">Loading inbox...</div>;
   if (error) return <div className="p-8 text-destructive">Error loading inbox</div>;
-
-  if (!items || items.length === 0) {
-    return (
-      <div className="p-8 h-full flex items-center justify-center">
-        <EmptyState
-          title="Inbox Zero"
-          description="All missed opportunities have been addressed. Great job!"
-          actionLabel="Go to Dashboard"
-          actionHref="/dashboard"
-          icon={CheckCircle}
-        />
-      </div>
-    );
-  }
 
   const handleResolve = async (id: number) => {
     try {
@@ -82,10 +100,15 @@ export function InboxPage() {
     }
   };
 
-  const counts = items.reduce<Record<string, number>>((acc, i) => {
+  const counts = (items ?? []).reduce<Record<string, number>>((acc, i) => {
     acc[i.kind] = (acc[i.kind] ?? 0) + 1;
     return acc;
   }, {});
+
+  const dateFilterActive = Boolean(from || to);
+  const totalLoaded = items?.length ?? 0;
+  const hasZeroFromFilter = !isLoading && dateFilterActive && totalLoaded === 0;
+  const isInboxZero = !isLoading && !dateFilterActive && totalLoaded === 0;
 
   return (
     <div className="p-8 max-w-5xl mx-auto space-y-6">
@@ -94,6 +117,45 @@ export function InboxPage() {
         <p className="text-muted-foreground mt-2">
           Review calls that need your attention. Follow up to close sales.
         </p>
+      </div>
+
+      <div className="flex flex-col gap-3 p-4 bg-card border rounded-lg">
+        <div className="flex flex-wrap items-end gap-3">
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-muted-foreground">From</label>
+            <Input
+              type="date"
+              value={from}
+              max={to || undefined}
+              onChange={(e) => setFrom(e.target.value)}
+              className="w-[160px]"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-muted-foreground">To</label>
+            <Input
+              type="date"
+              value={to}
+              min={from || undefined}
+              onChange={(e) => setTo(e.target.value)}
+              className="w-[160px]"
+            />
+          </div>
+          <div className="flex flex-wrap gap-1.5 pb-0.5">
+            <Button type="button" variant="outline" size="sm" onClick={() => applyPreset("today")}>Today</Button>
+            <Button type="button" variant="outline" size="sm" onClick={() => applyPreset("7d")}>Last 7 days</Button>
+            <Button type="button" variant="outline" size="sm" onClick={() => applyPreset("30d")}>Last 30 days</Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => applyPreset("all")}
+              disabled={!dateFilterActive}
+            >
+              Clear
+            </Button>
+          </div>
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
@@ -125,10 +187,24 @@ export function InboxPage() {
       </div>
 
       <p className="text-xs text-muted-foreground">
-        Showing {filtered.length} of {items.length} unresolved {items.length === 1 ? "item" : "items"}, newest first.
+        {isLoading
+          ? "Loading inbox..."
+          : `Showing ${filtered.length} of ${totalLoaded} unresolved ${totalLoaded === 1 ? "item" : "items"}${dateFilterActive ? " in selected range" : ""}, newest first.`}
       </p>
 
-      {filtered.length === 0 ? (
+      {isInboxZero ? (
+        <EmptyState
+          title="Inbox Zero"
+          description="All missed opportunities have been addressed. Great job!"
+          actionLabel="Go to Dashboard"
+          actionHref="/dashboard"
+          icon={CheckCircle}
+        />
+      ) : hasZeroFromFilter ? (
+        <div className="p-8 text-center text-sm text-muted-foreground border rounded-lg bg-card">
+          No unresolved items in the selected date range. Try widening the range or clearing the filter.
+        </div>
+      ) : filtered.length === 0 ? (
         <div className="p-8 text-center text-sm text-muted-foreground border rounded-lg bg-card">
           No items match the selected filters. Toggle a category above to see more.
         </div>

@@ -8,6 +8,8 @@
 
 export type GetInboxParams = {
 date?: Date;
+from?: Date;
+to?: Date;
 store?: string;
 includeResolved?: boolean;
 };

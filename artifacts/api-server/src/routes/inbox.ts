@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { and, desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, gte, lte, sql } from "drizzle-orm";
 import { db, calls, callGrades, inboxItems } from "@workspace/db";
 import { ResolveInboxItemBody } from "@workspace/api-zod";
 
@@ -10,6 +10,8 @@ router.get("/inbox", async (req, res) => {
   const includeResolved = req.query["includeResolved"] === "true";
   if (!includeResolved) filters.push(eq(inboxItems.resolved, false));
   if (req.query["date"]) filters.push(eq(inboxItems.callDate, String(req.query["date"])));
+  if (req.query["from"]) filters.push(gte(inboxItems.callDate, String(req.query["from"])));
+  if (req.query["to"]) filters.push(lte(inboxItems.callDate, String(req.query["to"])));
   if (req.query["store"]) filters.push(eq(calls.storeName, String(req.query["store"])));
 
   // Newest first so today's misses surface at the top of the inbox.

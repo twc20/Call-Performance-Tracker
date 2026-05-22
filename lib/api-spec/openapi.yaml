@@ -167,6 +167,12 @@ paths:
           name: date
           schema: { type: string, format: date }
         - in: query
+          name: from
+          schema: { type: string, format: date }
+        - in: query
+          name: to
+          schema: { type: string, format: date }
+        - in: query
           name: store
           schema: { type: string }
         - in: query

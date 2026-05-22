@@ -230,6 +230,8 @@ export const getInboxQueryIncludeResolvedDefault = false;
 
 export const GetInboxQueryParams = zod.object({
   "date": zod.date().optional(),
+  "from": zod.date().optional(),
+  "to": zod.date().optional(),
   "store": zod.coerce.string().optional(),
   "includeResolved": zod.coerce.boolean().default(getInboxQueryIncludeResolvedDefault)
 })

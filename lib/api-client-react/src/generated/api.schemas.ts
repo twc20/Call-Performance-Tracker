@@ -371,6 +371,8 @@ export const ListCallsStatus = {
 
 export type GetInboxParams = {
 date?: string;
+from?: string;
+to?: string;
 store?: string;
 includeResolved?: boolean;
 };
