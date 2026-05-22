@@ -164,13 +164,25 @@ export function parseCallJson(payload: unknown, filePath: string): ParsedCall | 
 
   const direction = parseDirection(get(obj, "direction", "type", "callDirection", "call_direction"));
 
+  // Podium dumps put EITHER a phone (+15059033104) OR a contact name
+  // ("Chavez Cliff") in clean_customer_name / customer_name_phone, depending
+  // on whether the caller is a known contact. Disambiguate by leading "+".
+  const isPhoneLike = (s: string | null) => !!s && /^\+?\d[\d\s().-]{6,}$/.test(s);
+  const ccn = str(get(obj, "clean_customer_name"));
+  const cnp = str(get(obj, "customer_name_phone"));
+  const podiumPhone = [ccn, cnp].find(isPhoneLike) ?? null;
+  const podiumName = [ccn, cnp].find((v) => v && !isPhoneLike(v)) ?? null;
+
+  // As a last-ditch effort, recording filenames sometimes embed the phone:
+  //   "2026-04-22_+15059033104_bf8d57d3.mp3"
+  const audioFile = str(get(obj, "audio_file_mp3", "recording_file", "audio_file"));
+  const audioPhone = audioFile?.match(/\+?\d{10,15}/)?.[0] ?? null;
+
   const customerPhoneRaw =
+    podiumPhone ??
     str(
       get(
         obj,
-        // Delta Tire / Podium dump fields (despite the misleading "name" suffix, these hold the phone)
-        "clean_customer_name",
-        "customer_name_phone",
         direction === "inbound" ? "from" : "to",
         direction === "inbound" ? "caller" : "callee",
         "customer.phone",
@@ -179,21 +191,24 @@ export function parseCallJson(payload: unknown, filePath: string): ParsedCall | 
         "phone",
         direction === "inbound" ? "from_number" : "to_number",
       ),
-    ) ?? str(get(obj, "from", "to", "phone"));
+    ) ??
+    str(get(obj, "from", "to", "phone")) ??
+    audioPhone;
 
-  const customerName = str(
-    get(
-      obj,
-      "customer.name",
-      "customerName",
-      "caller_name",
-      "callerName",
-      "contact.name",
-      "contactName",
-      "customer_full_name",
-      "customer_first_name",
-    ),
-  );
+  const customerName =
+    str(
+      get(
+        obj,
+        "customer.name",
+        "customerName",
+        "caller_name",
+        "callerName",
+        "contact.name",
+        "contactName",
+        "customer_full_name",
+        "customer_first_name",
+      ),
+    ) ?? podiumName;
 
   const storeName =
     str(

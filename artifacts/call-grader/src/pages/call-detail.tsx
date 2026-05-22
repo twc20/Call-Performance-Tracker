@@ -41,14 +41,16 @@ export function CallDetailPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-3">
-            {call.customerPhone}
+            {call.customerName ?? (call.customerPhone !== "unknown" ? call.customerPhone : "Unknown caller")}
             <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
               call.displayStatus.toLowerCase() === "missed" ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"
             }`}>
               {call.displayStatus}
             </span>
           </h1>
-          {call.customerName && <p className="text-muted-foreground mt-1 text-lg">{call.customerName}</p>}
+          {call.customerName && call.customerPhone !== "unknown" && (
+            <p className="text-muted-foreground mt-1 text-lg">{call.customerPhone}</p>
+          )}
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={handleRegrade} disabled={regrade.isPending}>
