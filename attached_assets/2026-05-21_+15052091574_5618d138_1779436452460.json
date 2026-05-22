@@ -1,0 +1,32 @@
+{
+  "customer_name_phone": "+15052091574",
+  "clean_customer_name": "+15052091574",
+  "call_type": "Missed Call",
+  "call_date": "May 21, 2026",
+  "call_time": "2:46 PM",
+  "call_datetime_iso_utc": "2026-05-21T20:46:25.361396Z",
+  "timezone": "America/Denver",
+  "receiving_company": "Delta Tire - Grants",
+  "brand": "delta",
+  "duration": "0:21",
+  "store_name": "Delta Tire - Grants",
+  "answered_by": "Unknown",
+  "summary": [
+    "Customer called to inquire about the readiness of a 2005 Chevy Silverado with a fuel pump issue.",
+    "Customer requested a callback before closing time to confirm if they can pick up the vehicle.",
+    "Customer provided a contact number for the callback."
+  ],
+  "transcript_lines": [],
+  "raw_transcript": "I, I good afternoon, this is bank of reno cheese calling for the Chevy. Silverado, 2005 with the feel pump was just wondering if it was about ready, so I can head out that way. Before closing time. Thanks. Bye. Call me back at 5. 052091574 bye.",
+  "audio_file_mp3": "2026-05-21_+15052091574_5618d138.mp3",
+  "source_file": "Podium_Calls_May 21, 2026",
+  "call_uid": "5618d138-77c8-466c-9e93-005edeadf89a",
+  "recording_uid": "a5c7b1df-d5f6-4948-a134-6ead13b1cee1",
+  "location_uid": "81c7c326-d2b2-5a29-ae65-6bc3b25c3363",
+  "display_status": "MISSED_CALL",
+  "direction": "INBOUND",
+  "has_audio": true,
+  "has_recording": true,
+  "is_recorded": false,
+  "call_summary_available": true
+}

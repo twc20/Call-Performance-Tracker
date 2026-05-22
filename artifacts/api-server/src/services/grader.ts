@@ -3,6 +3,17 @@ import { db, calls, rubricCriteria, callGrades, criterionScores } from "@workspa
 import type { Call, RubricCriterion } from "@workspace/db";
 import { getGeminiClient, GRADER_MODEL } from "../lib/gemini";
 import { logger } from "../lib/logger";
+import { syncShopperInboxAfterGrade } from "./followUp";
+
+const ALLOWED_INTENTS = [
+  "shopper_inquiry",
+  "existing_customer",
+  "appointment",
+  "service_status",
+  "complaint",
+  "other",
+] as const;
+type CallIntent = (typeof ALLOWED_INTENTS)[number];
 
 interface ModelCriterionScore {
   criterionName: string;
@@ -18,6 +29,7 @@ interface ModelGradeOutput {
   strengths: string[];
   improvements: string[];
   criterionScores: ModelCriterionScore[];
+  callIntent?: CallIntent;
 }
 
 function buildPrompt(call: Call, criteria: RubricCriterion[]): string {
@@ -63,6 +75,14 @@ INSTRUCTIONS
 - strengths: 2-3 short bullets of what the rep did well.
 - improvements: 2-3 short bullets of the highest-leverage things to fix.
 - Be honest. Missed callbacks, no price given, no appointment booked, and no follow-up commitment are major deductions.
+- callIntent: classify the primary reason the customer called. Pick exactly one:
+    * "shopper_inquiry"   — pricing, comparing options, exploring a purchase. THIS is what we follow up on.
+    * "existing_customer" — has an open RO or recent service; checking general account/relationship.
+    * "appointment"       — booking, rescheduling, or confirming an appointment.
+    * "service_status"    — asking about a vehicle already in the shop, pickup timing, repair status.
+    * "complaint"         — issue with prior service, billing, or product.
+    * "other"             — anything else (wrong number, hours, directions, vendor, internal).
+  Only "shopper_inquiry" should imply the rep owes a follow-up if no callback occurred.
 - Return ONLY a JSON object that matches the response schema. No prose.`;
 }
 
@@ -87,8 +107,12 @@ const responseSchema = {
         required: ["criterionName", "score"],
       },
     },
+    callIntent: {
+      type: "string",
+      enum: [...ALLOWED_INTENTS],
+    },
   },
-  required: ["overallScore", "summary", "strengths", "improvements", "criterionScores"],
+  required: ["overallScore", "summary", "strengths", "improvements", "criterionScores", "callIntent"],
 };
 
 export async function gradeCallById(callId: number): Promise<void> {
@@ -141,6 +165,9 @@ export async function gradeCall(call: Call): Promise<void> {
     if (!text) throw new Error("Empty grader response");
     const parsed = JSON.parse(text) as ModelGradeOutput;
 
+    const intent: CallIntent | null =
+      parsed.callIntent && ALLOWED_INTENTS.includes(parsed.callIntent) ? parsed.callIntent : null;
+
     await db.transaction(async (tx) => {
       await tx.delete(callGrades).where(eq(callGrades.callId, call.id));
       const [grade] = await tx
@@ -154,6 +181,7 @@ export async function gradeCall(call: Call): Promise<void> {
           improvements: parsed.improvements ?? [],
           model: GRADER_MODEL,
           rubricVersion: "v1",
+          callIntent: intent,
         })
         .returning();
 
@@ -179,6 +207,15 @@ export async function gradeCall(call: Call): Promise<void> {
         .set({ gradeStatus: "graded", gradeError: null, updatedAt: new Date() })
         .where(eq(calls.id, call.id));
     });
+
+    // Reconcile the shopper_no_followup inbox item now that we know the
+    // grader's intent classification. Runs outside the transaction so a
+    // bookkeeping failure here doesn't roll the grade back.
+    try {
+      await syncShopperInboxAfterGrade(call.id);
+    } catch (e) {
+      logger.warn({ err: e, callId: call.id }, "Failed to sync shopper inbox after grade");
+    }
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     logger.error({ err, callId: call.id }, "Grading failed");

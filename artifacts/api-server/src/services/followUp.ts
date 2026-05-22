@@ -1,15 +1,14 @@
 import { and, eq, sql } from "drizzle-orm";
-import { db, calls, inboxItems } from "@workspace/db";
+import { db, calls, callGrades, inboxItems } from "@workspace/db";
 import type { Call } from "@workspace/db";
 
-// A "shopper" is an inbound, answered call where the customer is pricing or
-// asking questions. For v1 we treat every answered inbound > 20s as a shopper
-// candidate (the grader will refine this later). A "missed" call is any
-// inbound call with displayStatus = missed or duration 0.
-
-function isShopper(c: Call): boolean {
-  return c.direction === "inbound" && c.displayStatus === "answered" && c.durationSeconds >= 20;
-}
+// Inbox classification, two-phase:
+//   1. At ingest time we only create MISSED items (open-hours / after-hours).
+//      Shopper follow-up items are NOT created here — they require the
+//      grader's intent classification to avoid false positives like a
+//      customer calling about a vehicle already in the shop.
+//   2. After grading, syncShopperInboxAfterGrade() runs and creates or
+//      removes a shopper_no_followup item based on the Gemini callIntent.
 
 function isMissed(c: Call): boolean {
   return c.direction === "inbound" && (c.displayStatus === "missed" || c.durationSeconds === 0);
@@ -39,28 +38,49 @@ export async function refreshInboxForCall(callId: number): Promise<void> {
   const [call] = await db.select().from(calls).where(eq(calls.id, callId));
   if (!call) return;
 
-  const candidate = (isShopper(call) || isMissed(call)) && call.customerPhone !== "unknown";
-  if (!candidate) {
-    await db.delete(inboxItems).where(eq(inboxItems.callId, callId));
+  // At ingest time we only handle MISSED items here. shopper_no_followup is
+  // created by syncShopperInboxAfterGrade() once the grader has classified
+  // the call's intent.
+  if (!isMissed(call) || call.customerPhone === "unknown") {
+    // Remove any existing missed-* item (shopper items are owned by the
+    // grading path and must not be touched here).
+    await db
+      .delete(inboxItems)
+      .where(
+        and(
+          eq(inboxItems.callId, callId),
+          sql`${inboxItems.kind} IN ('missed_no_callback', 'missed_after_hours')`,
+        ),
+      );
     return;
   }
 
   const followedUp = await hasSameDayCallback(call.customerPhone, call.callDate, call.callDatetime);
   if (followedUp) {
-    await db.delete(inboxItems).where(eq(inboxItems.callId, callId));
+    await db
+      .delete(inboxItems)
+      .where(
+        and(
+          eq(inboxItems.callId, callId),
+          sql`${inboxItems.kind} IN ('missed_no_callback', 'missed_after_hours')`,
+        ),
+      );
     return;
   }
 
-  const kind = isShopper(call)
-    ? "shopper_no_followup"
-    : call.isAfterHours
-      ? "missed_after_hours"
-      : "missed_no_callback";
+  const kind = call.isAfterHours ? "missed_after_hours" : "missed_no_callback";
 
+  // Only consider missed-kind rows here. Shopper rows are owned exclusively
+  // by syncShopperInboxAfterGrade and must not be mutated by ingest.
   const [existing] = await db
     .select()
     .from(inboxItems)
-    .where(eq(inboxItems.callId, callId))
+    .where(
+      and(
+        eq(inboxItems.callId, callId),
+        sql`${inboxItems.kind} IN ('missed_no_callback', 'missed_after_hours')`,
+      ),
+    )
     .limit(1);
   if (existing) {
     if (existing.kind !== kind) {
@@ -72,6 +92,80 @@ export async function refreshInboxForCall(callId: number): Promise<void> {
   await db.insert(inboxItems).values({
     callId,
     kind,
+    customerPhone: call.customerPhone,
+    callDate: call.callDate,
+  });
+}
+
+// Called from the grading transaction. Decides whether the freshly-graded
+// call should appear in the inbox as a shopper that needs a follow-up.
+//
+// Rules:
+//   - Only inbound, answered calls qualify (missed calls are owned by the
+//     ingest-time path above).
+//   - The grader must have classified the call's callIntent as
+//     "shopper_inquiry". Anything else (existing customer, service status,
+//     complaint, etc.) is explicitly skipped.
+//   - If there was an outbound callback to the same phone the same day, the
+//     follow-up is already done — nothing to flag.
+export async function syncShopperInboxAfterGrade(callId: number): Promise<void> {
+  const [call] = await db.select().from(calls).where(eq(calls.id, callId));
+  if (!call) return;
+
+  const removeExistingShopper = async () => {
+    await db
+      .delete(inboxItems)
+      .where(and(eq(inboxItems.callId, callId), eq(inboxItems.kind, "shopper_no_followup")));
+  };
+
+  const isAnsweredInbound =
+    call.direction === "inbound" &&
+    call.displayStatus === "answered" &&
+    call.durationSeconds >= 20 &&
+    call.customerPhone !== "unknown";
+  if (!isAnsweredInbound) {
+    await removeExistingShopper();
+    return;
+  }
+
+  const [grade] = await db
+    .select({ intent: callGrades.callIntent })
+    .from(callGrades)
+    .where(eq(callGrades.callId, callId))
+    .limit(1);
+  if (!grade || grade.intent !== "shopper_inquiry") {
+    await removeExistingShopper();
+    return;
+  }
+
+  const followedUp = await hasSameDayCallback(
+    call.customerPhone,
+    call.callDate,
+    call.callDatetime,
+  );
+  if (followedUp) {
+    await removeExistingShopper();
+    return;
+  }
+
+  const [existing] = await db
+    .select()
+    .from(inboxItems)
+    .where(eq(inboxItems.callId, callId))
+    .limit(1);
+  if (existing) {
+    if (existing.kind !== "shopper_no_followup") {
+      await db
+        .update(inboxItems)
+        .set({ kind: "shopper_no_followup" })
+        .where(eq(inboxItems.id, existing.id));
+    }
+    return;
+  }
+
+  await db.insert(inboxItems).values({
+    callId,
+    kind: "shopper_no_followup",
     customerPhone: call.customerPhone,
     callDate: call.callDate,
   });

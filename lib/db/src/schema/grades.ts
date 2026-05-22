@@ -26,6 +26,11 @@ export const callGrades = pgTable(
     improvements: jsonb("improvements").$type<string[]>().notNull().default([]),
     model: text("model").notNull(),
     rubricVersion: text("rubric_version").notNull().default("v1"),
+    // Gemini-classified intent of the call. Drives whether the call appears in
+    // the "shopper needs follow-up" inbox — only "shopper_inquiry" qualifies.
+    // Possible values: shopper_inquiry | existing_customer | appointment |
+    // service_status | complaint | other. Nullable for older grades.
+    callIntent: text("call_intent"),
     gradedAt: timestamp("graded_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (t) => [uniqueIndex("call_grades_call_uq").on(t.callId)],
