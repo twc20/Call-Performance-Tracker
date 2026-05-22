@@ -2,10 +2,10 @@ import { useGetInbox, useResolveInboxItem, getGetInboxQueryKey } from "@workspac
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import type { InboxItem } from "@workspace/api-client-react";
-import { useState } from "react";
 import { format } from "date-fns";
-import { Phone, User, Store, CheckCircle, Clock } from "lucide-react";
+import { Phone, User, Store, CheckCircle, Clock, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
+import { Link } from "wouter";
 import { EmptyState } from "@/components/empty-state";
 
 export function InboxPage() {
@@ -60,9 +60,12 @@ export function InboxPage() {
 
 function InboxCard({ item, onResolve }: { item: InboxItem; onResolve: () => void }) {
   const isShopper = item.kind === "shopper_no_followup";
-  
+
   return (
-    <div className="flex flex-col sm:flex-row gap-4 p-5 bg-card border rounded-lg shadow-sm">
+    <Link
+      href={`/calls/${item.callId}`}
+      className="flex flex-col sm:flex-row gap-4 p-5 bg-card border rounded-lg shadow-sm hover:border-primary/50 hover:shadow-md transition-all cursor-pointer group"
+    >
       <div className="flex-1 space-y-2">
         <div className="flex items-center gap-2">
           <span className={`px-2 py-1 rounded-md text-xs font-medium ${isShopper ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"}`}>
@@ -118,11 +121,20 @@ function InboxCard({ item, onResolve }: { item: InboxItem; onResolve: () => void
         )}
       </div>
       
-      <div className="flex items-center justify-end sm:border-l sm:pl-4">
-        <Button onClick={onResolve} variant="outline" className="w-full sm:w-auto">
+      <div className="flex items-center justify-end gap-2 sm:border-l sm:pl-4">
+        <Button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onResolve();
+          }}
+          variant="outline"
+          className="w-full sm:w-auto"
+        >
           Mark Resolved
         </Button>
+        <ChevronRight className="hidden sm:block w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
       </div>
-    </div>
+    </Link>
   );
 }
