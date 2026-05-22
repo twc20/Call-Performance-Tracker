@@ -1,4 +1,4 @@
-import { eq, and, isNull } from "drizzle-orm";
+import { eq, and, isNull, desc, sql } from "drizzle-orm";
 import { db, calls, rubricCriteria, callGrades, criterionScores } from "@workspace/db";
 import type { Call, RubricCriterion } from "@workspace/db";
 import { getGeminiClient, GRADER_MODEL } from "../lib/gemini";
@@ -195,11 +195,21 @@ function clamp(n: number, lo: number, hi: number): number {
   return Math.min(hi, Math.max(lo, n));
 }
 
+// Only grade calls from the last 6 months. Older calls stay "pending" but are
+// never picked up — keeps Gemini cost bounded and focuses coaching on recent work.
+export const GRADING_WINDOW_MONTHS = 6;
+
 export async function gradePending(limit = 25): Promise<{ graded: number; failed: number }> {
   const pending = await db
     .select()
     .from(calls)
-    .where(eq(calls.gradeStatus, "pending"))
+    .where(
+      and(
+        eq(calls.gradeStatus, "pending"),
+        sql`${calls.callDatetime} >= NOW() - INTERVAL '${sql.raw(String(GRADING_WINDOW_MONTHS))} months'`,
+      ),
+    )
+    .orderBy(desc(calls.callDatetime))
     .limit(limit);
 
   let graded = 0;

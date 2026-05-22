@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, and } from "drizzle-orm";
 import {
   db,
   calls,
@@ -10,7 +10,7 @@ import {
 import { walkJsonFiles, fetchJsonFile, CALL_DRIVE_FOLDER_ID } from "../lib/drive";
 import { parseCallJson, type ParsedCall } from "./parser";
 import { refreshInboxForCall, resolveInboxOnCallback } from "./followUp";
-import { gradePending } from "./grader";
+import { gradePending, GRADING_WINDOW_MONTHS } from "./grader";
 import { logger } from "../lib/logger";
 
 let running = false;
@@ -222,7 +222,8 @@ export async function runSync(runId: number, opts: { fullBackfill?: boolean } = 
       })
       .where(eq(syncRuns.id, runId));
 
-    // Full backfills grade aggressively so historical calls get scored in one go;
+    // Full backfills lift the per-run cap so the recent grading window (last
+    // 6 months — see GRADING_WINDOW_MONTHS in grader.ts) is drained in one go;
     // routine syncs stay bounded so a typical run completes quickly.
     const gradeCap = fullBackfill ? 10_000 : 50;
     const { graded, failed: gradeFailed } = await gradePending(gradeCap);
@@ -269,6 +270,11 @@ export async function getCounts() {
   const [{ pending = 0 } = { pending: 0 }] = await db
     .select({ pending: sql<number>`count(*)::int` })
     .from(calls)
-    .where(eq(calls.gradeStatus, "pending"));
+    .where(
+      and(
+        eq(calls.gradeStatus, "pending"),
+        sql`${calls.callDatetime} >= NOW() - INTERVAL '${sql.raw(String(GRADING_WINDOW_MONTHS))} months'`,
+      ),
+    );
   return { total, graded, pending };
 }
