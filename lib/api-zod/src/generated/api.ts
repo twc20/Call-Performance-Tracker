@@ -32,6 +32,16 @@ export const GetSyncStatusResponse = zod.object({
 
 
 /**
+ * @summary Trigger a Drive sync run (background)
+ */
+export const triggerSyncQueryFullDefault = false;
+
+export const TriggerSyncQueryParams = zod.object({
+  "full": zod.coerce.boolean().default(triggerSyncQueryFullDefault).describe('When true, ignore the rolling sync window and walk all Drive folders (one-time backfill).')
+})
+
+
+/**
  * @summary List all stores with call counts
  */
 export const ListStoresResponseItem = zod.object({

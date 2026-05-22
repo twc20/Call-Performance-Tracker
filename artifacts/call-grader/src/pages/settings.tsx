@@ -2,8 +2,9 @@ import { useGetSyncStatus, useTriggerSync, getGetSyncStatusQueryKey } from "@wor
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-import { RefreshCw, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
+import { RefreshCw, CheckCircle2, XCircle, AlertCircle, History } from "lucide-react";
 import { toast } from "sonner";
+import { useState } from "react";
 import { EmptyState } from "@/components/empty-state";
 
 export function SettingsPage() {
@@ -12,14 +13,39 @@ export function SettingsPage() {
   });
   const triggerSync = useTriggerSync();
   const queryClient = useQueryClient();
+  const [fullSyncing, setFullSyncing] = useState(false);
 
   const handleSync = async () => {
     try {
-      await triggerSync.mutateAsync();
+      await triggerSync.mutateAsync({ params: {} });
       queryClient.invalidateQueries({ queryKey: getGetSyncStatusQueryKey() });
       toast.success("Sync started");
     } catch (e) {
       toast.error("Failed to start sync");
+    }
+  };
+
+  const handleFullBackfill = async () => {
+    const confirmed = window.confirm(
+      "Full Backfill will walk every folder in the Drive source and ingest ALL historical calls (back to the earliest file).\n\n" +
+        "On a fresh database this can take hours and will run Gemini grading on thousands of calls (API cost).\n\n" +
+        "Re-running is safe — already-ingested calls are skipped. Proceed?",
+    );
+    if (!confirmed) return;
+    setFullSyncing(true);
+    try {
+      const res = await fetch(`${import.meta.env.BASE_URL}api/sync/run?full=true`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!res.ok && res.status !== 202) throw new Error(`HTTP ${res.status}`);
+      const body = await res.json();
+      queryClient.invalidateQueries({ queryKey: getGetSyncStatusQueryKey() });
+      toast.success(body.started ? "Full backfill started" : "Another sync is already running");
+    } catch (e) {
+      toast.error("Failed to start full backfill");
+    } finally {
+      setFullSyncing(false);
     }
   };
 
@@ -95,6 +121,26 @@ export function SettingsPage() {
           >
             <RefreshCw className={`w-4 h-4 mr-2 ${status?.running ? "animate-spin" : ""}`} />
             {status?.running ? "Syncing..." : "Sync Now"}
+          </Button>
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t">
+          <div className="flex flex-col">
+            <span className="text-sm font-medium">Full Historical Backfill</span>
+            <span className="text-xs text-muted-foreground max-w-md">
+              One-time sweep of the entire Drive folder — pulls every historical call (back to the earliest file)
+              and grades them. Routine syncs only look at the last 30 days; use this once per environment.
+            </span>
+          </div>
+
+          <Button
+            onClick={handleFullBackfill}
+            disabled={status?.running || fullSyncing}
+            variant="outline"
+            className="w-full sm:w-auto"
+          >
+            <History className={`w-4 h-4 mr-2 ${fullSyncing || status?.running ? "animate-spin" : ""}`} />
+            {status?.running ? "Sync running…" : fullSyncing ? "Starting…" : "Run Full Backfill"}
           </Button>
         </div>
       </div>

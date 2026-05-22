@@ -46,3 +46,4 @@ export * from './syncStatus';
 export * from './syncStatusLastSyncStatus';
 export * from './transcriptLine';
 export * from './trendPoint';
+export * from './triggerSyncParams';

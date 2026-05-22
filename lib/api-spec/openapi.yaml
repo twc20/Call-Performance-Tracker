@@ -41,6 +41,11 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/SyncStatus" }
   /sync/run:
+    parameters:
+      - in: query
+        name: full
+        schema: { type: boolean, default: false }
+        description: When true, ignore the rolling sync window and walk all Drive folders (one-time backfill).
     post:
       operationId: triggerSync
       tags: [sync]

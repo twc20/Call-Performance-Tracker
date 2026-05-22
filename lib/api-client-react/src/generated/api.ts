@@ -43,7 +43,8 @@ import type {
   StoreBreakdown,
   SyncRunStarted,
   SyncStatus,
-  TrendPoint
+  TrendPoint,
+  TriggerSyncParams
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -212,20 +213,25 @@ export function useGetSyncStatus<TData = Awaited<ReturnType<typeof getSyncStatus
 
 
 
-export const getTriggerSyncUrl = () => {
+export const getTriggerSyncUrl = (params?: TriggerSyncParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
 
 
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/api/sync/run`
+  return stringifiedParams.length > 0 ? `/api/sync/run?${stringifiedParams}` : `/api/sync/run`
 }
 
 /**
  * @summary Trigger a Drive sync run (background)
  */
-export const triggerSync = async ( options?: RequestInit): Promise<SyncRunStarted> => {
+export const triggerSync = async (params?: TriggerSyncParams, options?: RequestInit): Promise<SyncRunStarted> => {
 
-  return customFetch<SyncRunStarted>(getTriggerSyncUrl(),
+  return customFetch<SyncRunStarted>(getTriggerSyncUrl(params),
   {
     ...options,
     method: 'POST'
@@ -238,8 +244,8 @@ export const triggerSync = async ( options?: RequestInit): Promise<SyncRunStarte
 
 
 export const getTriggerSyncMutationOptions = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof triggerSync>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof triggerSync>>, TError,void, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof triggerSync>>, TError,{params?: TriggerSyncParams}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof triggerSync>>, TError,{params?: TriggerSyncParams}, TContext> => {
 
 const mutationKey = ['triggerSync'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -251,10 +257,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof triggerSync>>, void> = () => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof triggerSync>>, {params?: TriggerSyncParams}> = (props) => {
+          const {params} = props ?? {};
 
-
-          return  triggerSync(requestOptions)
+          return  triggerSync(params,requestOptions)
         }
 
 
@@ -272,11 +278,11 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
  * @summary Trigger a Drive sync run (background)
  */
 export const useTriggerSync = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof triggerSync>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof triggerSync>>, TError,{params?: TriggerSyncParams}, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof triggerSync>>,
         TError,
-        void,
+        {params?: TriggerSyncParams},
         TContext
       > => {
       return useMutation(getTriggerSyncMutationOptions(options));

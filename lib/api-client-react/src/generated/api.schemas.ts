@@ -336,6 +336,13 @@ export interface RubricCriterionUpdate {
   appliesTo?: RubricCriterionUpdateAppliesTo;
 }
 
+export type TriggerSyncParams = {
+/**
+ * When true, ignore the rolling sync window and walk all Drive folders (one-time backfill).
+ */
+full?: boolean;
+};
+
 export type ListCallsParams = {
 store?: string;
 employee?: string;
