@@ -1,0 +1,119 @@
+import { useGetInbox, useResolveInboxItem, getGetInboxQueryKey } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import type { InboxItem } from "@workspace/api-client-react";
+import { useState } from "react";
+import { format } from "date-fns";
+import { Phone, User, Store, CheckCircle, Clock } from "lucide-react";
+import { toast } from "sonner";
+import { EmptyState } from "@/components/empty-state";
+
+export function InboxPage() {
+  const { data: items, isLoading, error } = useGetInbox({ includeResolved: false });
+  const resolve = useResolveInboxItem();
+  const queryClient = useQueryClient();
+
+  if (isLoading) return <div className="p-8">Loading inbox...</div>;
+  if (error) return <div className="p-8 text-destructive">Error loading inbox</div>;
+
+  if (!items || items.length === 0) {
+    return (
+      <div className="p-8 h-full flex items-center justify-center">
+        <EmptyState
+          title="Inbox Zero"
+          description="All missed opportunities have been addressed. Great job!"
+          actionLabel="Go to Dashboard"
+          actionHref="/dashboard"
+          icon={CheckCircle}
+        />
+      </div>
+    );
+  }
+
+  const handleResolve = async (id: number) => {
+    try {
+      await resolve.mutateAsync({ id, data: { resolved: true } });
+      queryClient.invalidateQueries({ queryKey: getGetInboxQueryKey() });
+      toast.success("Item resolved");
+    } catch (e) {
+      toast.error("Failed to resolve item");
+    }
+  };
+
+  return (
+    <div className="p-8 max-w-5xl mx-auto space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">Missed Opportunities</h1>
+        <p className="text-muted-foreground mt-2">
+          Review calls that need your attention. Follow up to close sales.
+        </p>
+      </div>
+
+      <div className="grid gap-4">
+        {items.map((item) => (
+          <InboxCard key={item.id} item={item} onResolve={() => handleResolve(item.id)} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function InboxCard({ item, onResolve }: { item: InboxItem; onResolve: () => void }) {
+  const isShopper = item.kind === "shopper_no_followup";
+  
+  return (
+    <div className="flex flex-col sm:flex-row gap-4 p-5 bg-card border rounded-lg shadow-sm">
+      <div className="flex-1 space-y-2">
+        <div className="flex items-center gap-2">
+          <span className={`px-2 py-1 rounded-md text-xs font-medium ${isShopper ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"}`}>
+            {isShopper ? "Missed Follow-up" : "Missed Call"}
+          </span>
+          <span className="text-xs text-muted-foreground flex items-center gap-1">
+            <Clock className="w-3 h-3" />
+            {format(new Date(item.callDatetime), "MMM d, h:mm a")}
+          </span>
+        </div>
+        
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-1">
+            <div className="text-sm font-medium flex items-center gap-2">
+              <Phone className="w-4 h-4 text-muted-foreground" />
+              {item.customerPhone}
+            </div>
+            {item.customerName && (
+              <div className="text-sm text-muted-foreground flex items-center gap-2">
+                <User className="w-4 h-4" />
+                {item.customerName}
+              </div>
+            )}
+          </div>
+          
+          <div className="space-y-1">
+            <div className="text-sm flex items-center gap-2">
+              <Store className="w-4 h-4 text-muted-foreground" />
+              {item.store}
+            </div>
+            {item.employee && (
+              <div className="text-sm text-muted-foreground flex items-center gap-2">
+                <User className="w-4 h-4" />
+                {item.employee}
+              </div>
+            )}
+          </div>
+        </div>
+        
+        {item.summary && (
+          <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
+            {item.summary}
+          </p>
+        )}
+      </div>
+      
+      <div className="flex items-center justify-end sm:border-l sm:pl-4">
+        <Button onClick={onResolve} variant="outline" className="w-full sm:w-auto">
+          Mark Resolved
+        </Button>
+      </div>
+    </div>
+  );
+}

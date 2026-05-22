@@ -1,0 +1,268 @@
+// Defensive parser for unknown call-recording JSON formats.
+// Pulls common fields from a variety of upstream tools (CallRail, OpenPhone,
+// CallTrackingMetrics, Twilio, custom dumps) so the system is resilient to
+// schema drift across Delta Tire's stores.
+
+import type { TranscriptLine } from "@workspace/db";
+
+export interface ParsedCall {
+  sourceUid: string;
+  storeName: string;
+  brand: string | null;
+  employeeName: string | null;
+  customerPhone: string;
+  customerName: string | null;
+  direction: "inbound" | "outbound";
+  callDatetime: Date;
+  durationSeconds: number;
+  displayStatus: string;
+  hasTranscript: boolean;
+  transcript: TranscriptLine[];
+  summary: string[];
+  rawMeta: Record<string, unknown>;
+}
+
+type Json = Record<string, unknown>;
+
+function get(obj: Json, ...keys: string[]): unknown {
+  for (const k of keys) {
+    const parts = k.split(".");
+    let cur: unknown = obj;
+    for (const p of parts) {
+      if (cur && typeof cur === "object" && p in (cur as object)) {
+        cur = (cur as Record<string, unknown>)[p];
+      } else {
+        cur = undefined;
+        break;
+      }
+    }
+    if (cur !== undefined && cur !== null && cur !== "") return cur;
+  }
+  return undefined;
+}
+
+function str(v: unknown): string | null {
+  if (v == null) return null;
+  if (typeof v === "string") return v.trim() || null;
+  if (typeof v === "number" || typeof v === "boolean") return String(v);
+  return null;
+}
+
+function normalizePhone(raw: string | null): string {
+  if (!raw) return "unknown";
+  const digits = raw.replace(/[^\d]/g, "");
+  if (!digits) return "unknown";
+  if (digits.length === 11 && digits.startsWith("1")) return `+${digits}`;
+  if (digits.length === 10) return `+1${digits}`;
+  return `+${digits}`;
+}
+
+function parseDirection(v: unknown): "inbound" | "outbound" {
+  const s = (str(v) ?? "").toLowerCase();
+  if (s.includes("out") || s === "outgoing" || s === "outbound") return "outbound";
+  return "inbound";
+}
+
+function parseDuration(v: unknown): number {
+  if (typeof v === "number" && isFinite(v)) return Math.max(0, Math.round(v));
+  if (typeof v === "string") {
+    const colonParts = v.split(":").map((p) => Number(p.trim()));
+    if (colonParts.every((n) => Number.isFinite(n)) && colonParts.length >= 2) {
+      return colonParts.reduce((acc, n) => acc * 60 + n, 0);
+    }
+    const n = Number(v);
+    if (Number.isFinite(n)) return Math.max(0, Math.round(n));
+  }
+  return 0;
+}
+
+function parseDate(v: unknown): Date {
+  const s = str(v);
+  if (s) {
+    const d = new Date(s);
+    if (!isNaN(d.getTime())) return d;
+  }
+  if (typeof v === "number") {
+    const ms = v > 1e12 ? v : v * 1000;
+    const d = new Date(ms);
+    if (!isNaN(d.getTime())) return d;
+  }
+  return new Date();
+}
+
+function parseTranscript(v: unknown): TranscriptLine[] {
+  if (!v) return [];
+  if (typeof v === "string") {
+    return v
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((line) => {
+        const m = line.match(/^([A-Za-z][\w .'-]{0,40}?)\s*[:\-]\s*(.+)$/);
+        if (m) return { speaker: m[1]!.trim(), timestamp: "", text: m[2]!.trim() };
+        return { speaker: "", timestamp: "", text: line };
+      });
+  }
+  if (Array.isArray(v)) {
+    return v
+      .map((entry): TranscriptLine | null => {
+        if (typeof entry === "string") return { speaker: "", timestamp: "", text: entry };
+        if (entry && typeof entry === "object") {
+          const e = entry as Json;
+          const text = str(get(e, "text", "content", "message", "utterance", "transcript"));
+          if (!text) return null;
+          const speaker =
+            str(get(e, "speaker", "role", "participant", "channel", "side", "from")) ?? "";
+          const tsRaw = get(e, "timestamp", "time", "start", "startTime", "start_time", "offset");
+          let timestamp = "";
+          if (tsRaw != null) {
+            if (typeof tsRaw === "number") {
+              const s = Math.floor(tsRaw % 60);
+              const m = Math.floor((tsRaw / 60) % 60);
+              const h = Math.floor(tsRaw / 3600);
+              timestamp = h
+                ? `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`
+                : `${m}:${String(s).padStart(2, "0")}`;
+            } else timestamp = String(tsRaw);
+          }
+          return { speaker, timestamp, text };
+        }
+        return null;
+      })
+      .filter((x): x is TranscriptLine => !!x);
+  }
+  if (typeof v === "object") {
+    const obj = v as Json;
+    const candidate = obj["lines"] ?? obj["segments"] ?? obj["turns"] ?? obj["entries"];
+    if (Array.isArray(candidate)) return parseTranscript(candidate);
+  }
+  return [];
+}
+
+function parseSummary(v: unknown): string[] {
+  if (!v) return [];
+  if (typeof v === "string")
+    return v
+      .split(/\r?\n|•|- /)
+      .map((s) => s.trim())
+      .filter(Boolean);
+  if (Array.isArray(v)) return v.map((x) => str(x) ?? "").filter(Boolean);
+  if (typeof v === "object") {
+    const obj = v as Json;
+    const cand = obj["bullets"] ?? obj["points"] ?? obj["highlights"] ?? obj["text"];
+    if (cand) return parseSummary(cand);
+  }
+  return [];
+}
+
+export function parseCallJson(payload: unknown, filePath: string): ParsedCall | null {
+  if (!payload || typeof payload !== "object") return null;
+  const root = payload as Json;
+  // Some recorders nest under a "call" or "data" key
+  const obj = (root["call"] && typeof root["call"] === "object" ? (root["call"] as Json) : root);
+  const meta = { ...root };
+
+  const direction = parseDirection(get(obj, "direction", "type", "callDirection", "call_direction"));
+
+  const customerPhoneRaw =
+    str(
+      get(
+        obj,
+        direction === "inbound" ? "from" : "to",
+        direction === "inbound" ? "caller" : "callee",
+        direction === "inbound" ? "customer.phone" : "customer.phone",
+        "customer_phone",
+        "customerPhone",
+        "phone",
+        direction === "inbound" ? "from_number" : "to_number",
+      ),
+    ) ?? str(get(obj, "from", "to", "phone"));
+
+  const customerName = str(
+    get(obj, "customer.name", "customerName", "caller_name", "callerName", "contact.name", "contactName"),
+  );
+
+  const storeName =
+    str(
+      get(
+        obj,
+        "store",
+        "store_name",
+        "storeName",
+        "location",
+        "location_name",
+        "locationName",
+        "company",
+      ),
+    ) ?? deriveStoreFromPath(filePath);
+
+  const brand = str(get(obj, "brand", "company_brand"));
+
+  const employeeName = str(
+    get(
+      obj,
+      "employee",
+      "employee_name",
+      "employeeName",
+      "agent",
+      "agent_name",
+      "agentName",
+      "rep",
+      "rep_name",
+      "user.name",
+      "assigned_to",
+      "answered_by",
+      "answeredBy",
+    ),
+  );
+
+  const callDatetime = parseDate(
+    get(obj, "datetime", "callDatetime", "call_datetime", "started_at", "startedAt", "timestamp", "date", "start_time", "startTime"),
+  );
+
+  const durationSeconds = parseDuration(
+    get(obj, "duration", "duration_seconds", "durationSeconds", "talk_time", "talkTime", "length"),
+  );
+
+  const statusRaw =
+    (str(get(obj, "status", "outcome", "callStatus", "call_status", "disposition")) ?? "").toLowerCase();
+  let displayStatus = statusRaw || "answered";
+  if (durationSeconds === 0 && direction === "inbound") displayStatus = displayStatus || "missed";
+  if (statusRaw.includes("miss") || statusRaw === "no-answer" || statusRaw === "voicemail") {
+    displayStatus = "missed";
+  }
+  if (statusRaw.includes("answer") && !statusRaw.includes("no")) displayStatus = "answered";
+
+  const transcript = parseTranscript(get(obj, "transcript", "transcription", "transcript_text", "lines"));
+  const summary = parseSummary(
+    get(obj, "summary", "ai_summary", "aiSummary", "call_summary", "callSummary", "notes"),
+  );
+
+  const sourceUid =
+    str(get(obj, "id", "call_id", "callId", "uid", "uuid", "external_id", "externalId", "recording_id")) ??
+    filePath;
+
+  return {
+    sourceUid,
+    storeName: storeName ?? "Unassigned",
+    brand,
+    employeeName,
+    customerPhone: normalizePhone(customerPhoneRaw),
+    customerName,
+    direction,
+    callDatetime,
+    durationSeconds,
+    displayStatus,
+    hasTranscript: transcript.length > 0,
+    transcript,
+    summary,
+    rawMeta: meta,
+  };
+}
+
+function deriveStoreFromPath(path: string): string | null {
+  if (!path) return null;
+  const parts = path.split("/");
+  if (parts.length >= 2) return parts[0] ?? null;
+  return null;
+}

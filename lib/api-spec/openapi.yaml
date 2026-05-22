@@ -3,34 +3,658 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Call Grader API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
-    description: Health operations
+  - name: sync
+  - name: calls
+  - name: inbox
+  - name: dashboard
+  - name: coaching
+  - name: rubric
+  - name: stores
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
           content:
             application/json:
+              schema: { $ref: "#/components/schemas/HealthStatus" }
+
+  /sync/status:
+    get:
+      operationId: getSyncStatus
+      tags: [sync]
+      summary: Get the last sync status and totals
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SyncStatus" }
+  /sync/run:
+    post:
+      operationId: triggerSync
+      tags: [sync]
+      summary: Trigger a Drive sync run (background)
+      responses:
+        "202":
+          description: Started
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SyncRunStarted" }
+
+  /stores:
+    get:
+      operationId: listStores
+      tags: [stores]
+      summary: List all stores with call counts
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
               schema:
-                $ref: "#/components/schemas/HealthStatus"
+                type: array
+                items: { $ref: "#/components/schemas/Store" }
+
+  /employees:
+    get:
+      operationId: listEmployees
+      tags: [coaching]
+      summary: List all employees with call counts and average grade
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/EmployeeSummary" }
+
+  /calls:
+    get:
+      operationId: listCalls
+      tags: [calls]
+      summary: List calls with filters
+      parameters:
+        - in: query
+          name: store
+          schema: { type: string }
+        - in: query
+          name: employee
+          schema: { type: string }
+        - in: query
+          name: direction
+          schema: { type: string, enum: [inbound, outbound, all] }
+        - in: query
+          name: status
+          schema: { type: string, enum: [answered, missed, all] }
+        - in: query
+          name: from
+          schema: { type: string, format: date }
+        - in: query
+          name: to
+          schema: { type: string, format: date }
+        - in: query
+          name: search
+          schema: { type: string }
+        - in: query
+          name: limit
+          schema: { type: integer, default: 50, maximum: 200 }
+        - in: query
+          name: offset
+          schema: { type: integer, default: 0 }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CallListResponse" }
+
+  /calls/{id}:
+    get:
+      operationId: getCall
+      tags: [calls]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CallDetail" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorResponse" }
+
+  /calls/{id}/regrade:
+    post:
+      operationId: regradeCall
+      tags: [calls]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CallDetail" }
+
+  /inbox:
+    get:
+      operationId: getInbox
+      tags: [inbox]
+      summary: Missed opportunities — shoppers without follow-up + missed calls without callback
+      parameters:
+        - in: query
+          name: date
+          schema: { type: string, format: date }
+        - in: query
+          name: store
+          schema: { type: string }
+        - in: query
+          name: includeResolved
+          schema: { type: boolean, default: false }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/InboxItem" }
+
+  /inbox/{id}/resolve:
+    post:
+      operationId: resolveInboxItem
+      tags: [inbox]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/InboxResolveInput" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/InboxItem" }
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Top-line KPIs
+      parameters:
+        - in: query
+          name: from
+          schema: { type: string, format: date }
+        - in: query
+          name: to
+          schema: { type: string, format: date }
+        - in: query
+          name: store
+          schema: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DashboardSummary" }
+
+  /dashboard/trends:
+    get:
+      operationId: getDashboardTrends
+      tags: [dashboard]
+      summary: Daily call volume and grade trends
+      parameters:
+        - in: query
+          name: days
+          schema: { type: integer, default: 30, maximum: 180 }
+        - in: query
+          name: store
+          schema: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/TrendPoint" }
+
+  /dashboard/leaderboard:
+    get:
+      operationId: getLeaderboard
+      tags: [dashboard]
+      summary: Employees ranked by average grade
+      parameters:
+        - in: query
+          name: from
+          schema: { type: string, format: date }
+        - in: query
+          name: to
+          schema: { type: string, format: date }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/LeaderboardEntry" }
+
+  /dashboard/store-breakdown:
+    get:
+      operationId: getStoreBreakdown
+      tags: [dashboard]
+      summary: Per-store stats
+      parameters:
+        - in: query
+          name: from
+          schema: { type: string, format: date }
+        - in: query
+          name: to
+          schema: { type: string, format: date }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/StoreBreakdown" }
+
+  /coaching/employees/{name}:
+    get:
+      operationId: getEmployeeCoaching
+      tags: [coaching]
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EmployeeCoaching" }
+
+  /rubric:
+    get:
+      operationId: listRubricCriteria
+      tags: [rubric]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/RubricCriterion" }
+    post:
+      operationId: createRubricCriterion
+      tags: [rubric]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RubricCriterionInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RubricCriterion" }
+
+  /rubric/{id}:
+    patch:
+      operationId: updateRubricCriterion
+      tags: [rubric]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RubricCriterionUpdate" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RubricCriterion" }
+    delete:
+      operationId: deleteRubricCriterion
+      tags: [rubric]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "204":
+          description: Deleted
+
 components:
   schemas:
     HealthStatus:
       type: object
+      required: [status]
       properties:
-        status:
-          type: string
-      required:
-        - status
+        status: { type: string }
 
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+        code: { type: string }
+
+    SyncStatus:
+      type: object
+      required: [totalCalls, gradedCalls, lastSyncAt, lastSyncStatus]
+      properties:
+        totalCalls: { type: integer }
+        gradedCalls: { type: integer }
+        pendingGrade: { type: integer }
+        lastSyncAt: { type: ["string", "null"], format: date-time }
+        lastSyncStatus: { type: ["string", "null"], enum: [running, success, error, null] }
+        lastSyncMessage: { type: ["string", "null"] }
+        lastSyncFilesAdded: { type: ["integer", "null"] }
+        running: { type: boolean }
+
+    SyncRunStarted:
+      type: object
+      required: [started, runId]
+      properties:
+        started: { type: boolean }
+        runId: { type: integer }
+
+    Store:
+      type: object
+      required: [name, totalCalls]
+      properties:
+        name: { type: string }
+        brand: { type: ["string", "null"] }
+        totalCalls: { type: integer }
+        inboundCalls: { type: integer }
+        missedCalls: { type: integer }
+        averageGrade: { type: ["number", "null"] }
+
+    EmployeeSummary:
+      type: object
+      required: [name, totalCalls]
+      properties:
+        name: { type: string }
+        totalCalls: { type: integer }
+        gradedCalls: { type: integer }
+        averageGrade: { type: ["number", "null"] }
+        store: { type: ["string", "null"] }
+
+    Call:
+      type: object
+      required: [id, sourceUid, store, customerPhone, direction, callDatetime, durationSeconds, displayStatus]
+      properties:
+        id: { type: integer }
+        sourceUid: { type: string }
+        store: { type: string }
+        brand: { type: ["string", "null"] }
+        employee: { type: ["string", "null"] }
+        customerPhone: { type: string }
+        customerName: { type: ["string", "null"] }
+        direction: { type: string, enum: [inbound, outbound] }
+        callDatetime: { type: string, format: date-time }
+        durationSeconds: { type: integer }
+        displayStatus: { type: string }
+        hasTranscript: { type: boolean }
+        overallGrade: { type: ["number", "null"] }
+        gradeStatus: { type: string, enum: [pending, graded, skipped, error] }
+
+    CallListResponse:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/Call" }
+        total: { type: integer }
+
+    TranscriptLine:
+      type: object
+      required: [speaker, timestamp, text]
+      properties:
+        speaker: { type: string }
+        timestamp: { type: string }
+        text: { type: string }
+
+    CriterionScore:
+      type: object
+      required: [criterionId, criterionName, score]
+      properties:
+        criterionId: { type: integer }
+        criterionName: { type: string }
+        score: { type: number }
+        note: { type: ["string", "null"] }
+        evidence: { type: ["string", "null"] }
+
+    CallGrade:
+      type: object
+      required: [overallScore, summary, criterionScores, model, gradedAt]
+      properties:
+        overallScore: { type: number }
+        summary: { type: string }
+        coachingNotes: { type: ["string", "null"] }
+        strengths:
+          type: array
+          items: { type: string }
+        improvements:
+          type: array
+          items: { type: string }
+        criterionScores:
+          type: array
+          items: { $ref: "#/components/schemas/CriterionScore" }
+        model: { type: string }
+        gradedAt: { type: string, format: date-time }
+
+    RelatedCall:
+      type: object
+      required: [id, direction, callDatetime, durationSeconds, displayStatus]
+      properties:
+        id: { type: integer }
+        direction: { type: string }
+        callDatetime: { type: string, format: date-time }
+        durationSeconds: { type: integer }
+        displayStatus: { type: string }
+        employee: { type: ["string", "null"] }
+        store: { type: string }
+
+    CallDetail:
+      type: object
+      required: [call, transcript, summary]
+      properties:
+        call: { $ref: "#/components/schemas/Call" }
+        transcript:
+          type: array
+          items: { $ref: "#/components/schemas/TranscriptLine" }
+        summary:
+          type: array
+          items: { type: string }
+        grade: { $ref: "#/components/schemas/CallGrade" }
+        relatedCalls:
+          type: array
+          items: { $ref: "#/components/schemas/RelatedCall" }
+        followUp: { $ref: "#/components/schemas/FollowUpInfo" }
+
+    FollowUpInfo:
+      type: object
+      required: [requiresFollowUp, followedUp]
+      properties:
+        requiresFollowUp: { type: boolean }
+        followedUp: { type: boolean }
+        followUpCallId: { type: ["integer", "null"] }
+        followUpAt: { type: ["string", "null"], format: date-time }
+        reason: { type: ["string", "null"] }
+
+    InboxItem:
+      type: object
+      required: [id, callId, kind, customerPhone, store, callDatetime, resolved]
+      properties:
+        id: { type: integer }
+        callId: { type: integer }
+        kind: { type: string, enum: [shopper_no_followup, missed_no_callback] }
+        customerPhone: { type: string }
+        customerName: { type: ["string", "null"] }
+        store: { type: string }
+        employee: { type: ["string", "null"] }
+        callDatetime: { type: string, format: date-time }
+        summary: { type: ["string", "null"] }
+        overallGrade: { type: ["number", "null"] }
+        resolved: { type: boolean }
+        resolvedAt: { type: ["string", "null"], format: date-time }
+        resolvedNote: { type: ["string", "null"] }
+
+    InboxResolveInput:
+      type: object
+      required: [resolved]
+      properties:
+        resolved: { type: boolean }
+        note: { type: string }
+
+    DashboardSummary:
+      type: object
+      required: [totalCalls, answeredCalls, missedCalls, outboundCalls, averageGrade, shoppersFollowedUpPct, missedCallbackPct]
+      properties:
+        totalCalls: { type: integer }
+        answeredCalls: { type: integer }
+        missedCalls: { type: integer }
+        outboundCalls: { type: integer }
+        averageGrade: { type: ["number", "null"] }
+        gradedCalls: { type: integer }
+        shoppers: { type: integer }
+        shoppersFollowedUp: { type: integer }
+        shoppersFollowedUpPct: { type: number }
+        missedCallbacks: { type: integer }
+        missedCallbackPct: { type: number }
+        averageDurationSeconds: { type: ["number", "null"] }
+
+    TrendPoint:
+      type: object
+      required: [date, totalCalls]
+      properties:
+        date: { type: string, format: date }
+        totalCalls: { type: integer }
+        answeredCalls: { type: integer }
+        missedCalls: { type: integer }
+        averageGrade: { type: ["number", "null"] }
+
+    LeaderboardEntry:
+      type: object
+      required: [employee, totalCalls, gradedCalls, averageGrade]
+      properties:
+        employee: { type: string }
+        store: { type: ["string", "null"] }
+        totalCalls: { type: integer }
+        gradedCalls: { type: integer }
+        averageGrade: { type: number }
+
+    StoreBreakdown:
+      type: object
+      required: [store, totalCalls, averageGrade]
+      properties:
+        store: { type: string }
+        brand: { type: ["string", "null"] }
+        totalCalls: { type: integer }
+        answeredCalls: { type: integer }
+        missedCalls: { type: integer }
+        averageGrade: { type: ["number", "null"] }
+        shoppersFollowedUpPct: { type: number }
+
+    EmployeeCoaching:
+      type: object
+      required: [employee, totalCalls, gradedCalls, averageGrade, criterionAverages, bestCall, worstCall, recentCalls]
+      properties:
+        employee: { type: string }
+        store: { type: ["string", "null"] }
+        totalCalls: { type: integer }
+        gradedCalls: { type: integer }
+        averageGrade: { type: number }
+        criterionAverages:
+          type: array
+          items: { $ref: "#/components/schemas/CriterionAverage" }
+        topStrengths:
+          type: array
+          items: { type: string }
+        topImprovements:
+          type: array
+          items: { type: string }
+        bestCall: { $ref: "#/components/schemas/Call" }
+        worstCall: { $ref: "#/components/schemas/Call" }
+        recentCalls:
+          type: array
+          items: { $ref: "#/components/schemas/Call" }
+
+    CriterionAverage:
+      type: object
+      required: [criterionId, criterionName, averageScore, calls]
+      properties:
+        criterionId: { type: integer }
+        criterionName: { type: string }
+        averageScore: { type: number }
+        calls: { type: integer }
+
+    RubricCriterion:
+      type: object
+      required: [id, name, description, weight, active, appliesTo, createdAt]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        description: { type: string }
+        weight: { type: number }
+        active: { type: boolean }
+        appliesTo: { type: string, enum: [inbound, outbound, all] }
+        createdAt: { type: string, format: date-time }
+
+    RubricCriterionInput:
+      type: object
+      required: [name, description]
+      properties:
+        name: { type: string, minLength: 1 }
+        description: { type: string, minLength: 1 }
+        weight: { type: number, default: 1 }
+        appliesTo: { type: string, enum: [inbound, outbound, all], default: inbound }
+
+    RubricCriterionUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 1 }
+        description: { type: string, minLength: 1 }
+        weight: { type: number }
+        active: { type: boolean }
+        appliesTo: { type: string, enum: [inbound, outbound, all] }

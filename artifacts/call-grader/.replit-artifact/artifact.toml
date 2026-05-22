@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Call Grader"
+version = "1.0.0"
+id = "artifacts/call-grader"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22427
+
+[services.development]
+run = "pnpm --filter @workspace/call-grader run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/call-grader", "run", "build" ]
+publicDir = "artifacts/call-grader/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22427"
+BASE_PATH = "/"
