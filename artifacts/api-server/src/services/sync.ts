@@ -75,8 +75,18 @@ async function upsertCustomer(phone: string, name: string | null): Promise<numbe
   return row!.id;
 }
 
+// Stores' local-day grouping. Delta Tire operates on Mountain Time; a call at
+// 11:58 PM Mountain (~05:58 UTC the next day) belongs to the operator's
+// previous workday, so we group by Denver-local date, not UTC.
+const STORE_TZ = process.env.STORE_TIMEZONE ?? "America/Denver";
 function dateOnly(d: Date): string {
-  return d.toISOString().slice(0, 10);
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: STORE_TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(d);
+  return parts; // en-CA yields YYYY-MM-DD
 }
 
 async function upsertCall(parsed: ParsedCall, fileId: string, filePath: string): Promise<number | null> {

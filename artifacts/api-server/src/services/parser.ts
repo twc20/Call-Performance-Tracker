@@ -268,10 +268,24 @@ export function parseCallJson(payload: unknown, filePath: string): ParsedCall | 
     (str(get(obj, "display_status", "status", "outcome", "callStatus", "call_status", "disposition")) ?? "").toLowerCase();
   let displayStatus = statusRaw || "answered";
   if (durationSeconds === 0 && direction === "inbound") displayStatus = displayStatus || "missed";
-  if (statusRaw.includes("miss") || statusRaw === "no-answer" || statusRaw === "voicemail") {
+  // Normalize the Podium status vocabulary into just {answered, missed}.
+  if (
+    statusRaw.includes("miss") ||
+    statusRaw === "no-answer" ||
+    statusRaw === "no_answer" ||
+    statusRaw === "voicemail" ||
+    statusRaw === "abandoned" ||
+    statusRaw === "prompt_to_text"
+  ) {
     displayStatus = "missed";
+  } else if (
+    (statusRaw.includes("answer") && !statusRaw.includes("no")) ||
+    statusRaw === "completed" ||
+    statusRaw === "active" ||
+    statusRaw === "incoming"
+  ) {
+    displayStatus = "answered";
   }
-  if (statusRaw.includes("answer") && !statusRaw.includes("no")) displayStatus = "answered";
 
   const transcript = parseTranscript(
     get(obj, "transcript_lines", "transcript", "transcription", "transcript_text", "lines"),

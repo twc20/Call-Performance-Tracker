@@ -1,0 +1,203 @@
+{
+  "customer_name_phone": "+19282426346",
+  "clean_customer_name": "+19282426346",
+  "call_type": "Outbound Call",
+  "call_date": "May 21, 2026",
+  "call_time": "2:17 PM",
+  "call_datetime_iso_utc": "2026-05-21T20:17:27.350701Z",
+  "timezone": "America/Denver",
+  "receiving_company": "Delta Tire - Eagar",
+  "brand": "delta",
+  "duration": "0:24",
+  "store_name": "Delta Tire - Eagar",
+  "answered_by": "Canon Eaves",
+  "summary": [
+    "Business called Customer to discuss picking up an item before closing.",
+    "Customer confirmed they are currently at work but plans to arrive around 3:15.",
+    "Business acknowledged the timing and confirmed they will see Customer then."
+  ],
+  "transcript_lines": [
+    {
+      "speaker": "Customer",
+      "timestamp": "0:01",
+      "text": "Hello?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:02",
+      "text": "Hey Bridget."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:02",
+      "text": "This is Cannon at Delta Tire again."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:06",
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:06",
+      "text": "We're just closing"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:06",
+      "text": "Hi."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:06",
+      "text": "the PRs."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:06",
+      "text": "Were you over are you over here in New today?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:06",
+      "text": "Did you wanna swing by and come grab that before we"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:11",
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:11",
+      "text": "close?"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:11",
+      "text": "I I will but I'm at work at the moment."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:13",
+      "text": "That's okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:14",
+      "text": "So"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:14",
+      "text": "Just wanted"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:14",
+      "text": "it"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:14",
+      "text": "to"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:15",
+      "text": "should"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:15",
+      "text": "go."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:15",
+      "text": "be probably around 3 33 15"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:17",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:18",
+      "text": "something like that."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:18",
+      "text": "Alrighty."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:18",
+      "text": "Okay?"
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:19",
+      "text": "We will see you"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:20",
+      "text": "Okay."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:20",
+      "text": "then Bridget."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:20",
+      "text": "Thank you."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:21",
+      "text": "Alright."
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:21",
+      "text": "Thanks."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:22",
+      "text": "You"
+    },
+    {
+      "speaker": "Customer",
+      "timestamp": "0:22",
+      "text": "Bye."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:22",
+      "text": "bet."
+    },
+    {
+      "speaker": "Business",
+      "timestamp": "0:22",
+      "text": "Bye."
+    }
+  ],
+  "raw_transcript": "",
+  "audio_file_mp3": "2026-05-21_+19282426346_8c3d54b0.mp3",
+  "source_file": "Podium_Calls_May 21, 2026",
+  "call_uid": "8c3d54b0-74ae-4695-9804-5d499e326c94",
+  "recording_uid": "4f41cec2-5bb3-49e0-b2b5-69099a1310b7",
+  "location_uid": "01978a31-b569-73e8-9f8e-ea7677ba4a64",
+  "display_status": "COMPLETED",
+  "direction": "OUTBOUND",
+  "has_audio": true,
+  "has_recording": true,
+  "is_recorded": true,
+  "call_summary_available": true
+}
