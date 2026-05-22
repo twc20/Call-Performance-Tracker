@@ -12,4 +12,5 @@ export type InboxItemKind = typeof InboxItemKind[keyof typeof InboxItemKind];
 export const InboxItemKind = {
   shopper_no_followup: 'shopper_no_followup',
   missed_no_callback: 'missed_no_callback',
+  missed_after_hours: 'missed_after_hours',
 } as const;

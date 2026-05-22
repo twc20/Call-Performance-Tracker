@@ -67,7 +67,11 @@ export function DashboardPage() {
         <StatCard 
           title="Missed Calls" 
           value={summary.missedCalls} 
-          subtitle={`${summary.missedCallbackPct.toFixed(1)}% no callback`}
+          subtitle={
+            summary.missedAfterHours !== undefined && summary.missedDuringHours !== undefined
+              ? `${summary.missedDuringHours} during hours · ${summary.missedAfterHours} after hours`
+              : `${summary.missedCallbackPct.toFixed(1)}% no callback`
+          }
           icon={PhoneMissed} 
           trend="down"
         />
@@ -103,10 +107,13 @@ export function DashboardPage() {
                   />
                   <Tooltip 
                     contentStyle={{ backgroundColor: "hsl(var(--card))", borderColor: "hsl(var(--border))" }}
-                    labelFormatter={(v) => format(new Date(v), "MMM d, yyyy")}
+                    labelFormatter={(v) => format(new Date(v + "T12:00:00"), "EEE, MMM d, yyyy")}
                   />
-                  <Line type="monotone" dataKey="answeredCalls" name="Answered" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
-                  <Line type="monotone" dataKey="missedCalls" name="Missed" stroke="hsl(var(--destructive))" strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="totalCalls" name="Total" stroke="hsl(var(--foreground))" strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="answeredCalls" name="Inbound Answered" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="missedDuringHours" name="Missed (open hours)" stroke="hsl(var(--destructive))" strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="missedAfterHours" name="Missed (after hours)" stroke="#d97706" strokeWidth={2} dot={false} strokeDasharray="4 4" />
+                  <Line type="monotone" dataKey="outboundCalls" name="Outbound" stroke="hsl(var(--muted-foreground))" strokeWidth={1} dot={false} strokeDasharray="2 4" />
                 </LineChart>
               </ResponsiveContainer>
             ) : (

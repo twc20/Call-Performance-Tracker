@@ -92,7 +92,12 @@ function groupByDate(items: InboxItem[]): Array<[string, InboxItem[]]> {
 }
 
 function InboxCard({ item, onResolve }: { item: InboxItem; onResolve: () => void }) {
-  const isShopper = item.kind === "shopper_no_followup";
+  const label =
+    item.kind === "shopper_no_followup"
+      ? { text: "Missed Follow-up", className: "bg-primary/10 text-primary" }
+      : item.kind === "missed_after_hours"
+        ? { text: "Missed (After Hours)", className: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200" }
+        : { text: "Missed Call", className: "bg-destructive/10 text-destructive" };
 
   return (
     <Link
@@ -101,8 +106,8 @@ function InboxCard({ item, onResolve }: { item: InboxItem; onResolve: () => void
     >
       <div className="flex-1 space-y-2">
         <div className="flex items-center gap-2">
-          <span className={`px-2 py-1 rounded-md text-xs font-medium ${isShopper ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"}`}>
-            {isShopper ? "Missed Follow-up" : "Missed Call"}
+          <span className={`px-2 py-1 rounded-md text-xs font-medium ${label.className}`}>
+            {label.text}
           </span>
           <span className="text-xs text-muted-foreground flex items-center gap-1">
             <Clock className="w-3 h-3" />

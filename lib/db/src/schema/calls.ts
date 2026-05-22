@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
+  boolean,
   index,
   integer,
   jsonb,
@@ -35,6 +36,9 @@ export const calls = pgTable(
     callDate: text("call_date").notNull(),
     durationSeconds: integer("duration_seconds").notNull().default(0),
     displayStatus: text("display_status").notNull().default("answered"),
+    // True when the call arrived outside the receiving store's operating
+    // hours (Mountain Time). Computed at ingest time from store + datetime.
+    isAfterHours: boolean("is_after_hours").notNull().default(false),
     hasTranscript: integer("has_transcript").notNull().default(0),
     transcript: jsonb("transcript").$type<TranscriptLine[]>().notNull().default([]),
     summary: jsonb("summary").$type<string[]>().notNull().default([]),

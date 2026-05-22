@@ -237,7 +237,7 @@ export const GetInboxQueryParams = zod.object({
 export const GetInboxResponseItem = zod.object({
   "id": zod.number(),
   "callId": zod.number(),
-  "kind": zod.enum(['shopper_no_followup', 'missed_no_callback']),
+  "kind": zod.enum(['shopper_no_followup', 'missed_no_callback', 'missed_after_hours']),
   "customerPhone": zod.string(),
   "customerName": zod.string().nullish(),
   "store": zod.string(),
@@ -264,7 +264,7 @@ export const ResolveInboxItemBody = zod.object({
 export const ResolveInboxItemResponse = zod.object({
   "id": zod.number(),
   "callId": zod.number(),
-  "kind": zod.enum(['shopper_no_followup', 'missed_no_callback']),
+  "kind": zod.enum(['shopper_no_followup', 'missed_no_callback', 'missed_after_hours']),
   "customerPhone": zod.string(),
   "customerName": zod.string().nullish(),
   "store": zod.string(),
@@ -291,6 +291,8 @@ export const GetDashboardSummaryResponse = zod.object({
   "totalCalls": zod.number(),
   "answeredCalls": zod.number(),
   "missedCalls": zod.number(),
+  "missedDuringHours": zod.number().optional(),
+  "missedAfterHours": zod.number().optional(),
   "outboundCalls": zod.number(),
   "averageGrade": zod.number().nullable(),
   "gradedCalls": zod.number().optional(),
@@ -321,6 +323,9 @@ export const GetDashboardTrendsResponseItem = zod.object({
   "totalCalls": zod.number(),
   "answeredCalls": zod.number().optional(),
   "missedCalls": zod.number().optional(),
+  "missedDuringHours": zod.number().optional(),
+  "missedAfterHours": zod.number().optional(),
+  "outboundCalls": zod.number().optional(),
   "averageGrade": zod.number().nullish()
 })
 export const GetDashboardTrendsResponse = zod.array(GetDashboardTrendsResponseItem)

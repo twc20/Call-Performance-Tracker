@@ -4,6 +4,7 @@
 // schema drift across Delta Tire's stores.
 
 import type { TranscriptLine } from "@workspace/db";
+import { isAfterHours } from "../lib/storeHours";
 
 export interface ParsedCall {
   sourceUid: string;
@@ -17,6 +18,7 @@ export interface ParsedCall {
   callDate: string | null;
   durationSeconds: number;
   displayStatus: string;
+  isAfterHours: boolean;
   hasTranscript: boolean;
   transcript: TranscriptLine[];
   summary: string[];
@@ -333,6 +335,7 @@ export function parseCallJson(payload: unknown, filePath: string): ParsedCall | 
     callDate,
     durationSeconds,
     displayStatus,
+    isAfterHours: isAfterHours(storeName, callDatetime),
     hasTranscript: transcript.length > 0,
     transcript,
     summary,

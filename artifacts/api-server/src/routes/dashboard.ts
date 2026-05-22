@@ -56,6 +56,8 @@ router.get("/dashboard/summary", async (req, res) => {
       (SELECT COUNT(*)::int FROM filtered) AS "totalCalls",
       (SELECT COUNT(*)::int FROM filtered WHERE direction='inbound' AND display_status='answered' AND duration_seconds > 0) AS "answeredCalls",
       (SELECT COUNT(*)::int FROM filtered WHERE direction='inbound' AND (display_status='missed' OR duration_seconds = 0)) AS "missedCalls",
+      (SELECT COUNT(*)::int FROM filtered WHERE direction='inbound' AND (display_status='missed' OR duration_seconds = 0) AND is_after_hours = false) AS "missedDuringHours",
+      (SELECT COUNT(*)::int FROM filtered WHERE direction='inbound' AND (display_status='missed' OR duration_seconds = 0) AND is_after_hours = true) AS "missedAfterHours",
       (SELECT COUNT(*)::int FROM filtered WHERE direction='outbound') AS "outboundCalls",
       (SELECT AVG(overall_score)::float FROM filtered WHERE overall_score IS NOT NULL) AS "averageGrade",
       (SELECT COUNT(*)::int FROM filtered WHERE overall_score IS NOT NULL) AS "gradedCalls",
@@ -87,6 +89,9 @@ router.get("/dashboard/trends", async (req, res) => {
       COUNT(*)::int AS "totalCalls",
       SUM(CASE WHEN c.direction='inbound' AND c.display_status='answered' AND c.duration_seconds > 0 THEN 1 ELSE 0 END)::int AS "answeredCalls",
       SUM(CASE WHEN c.direction='inbound' AND (c.display_status='missed' OR c.duration_seconds=0) THEN 1 ELSE 0 END)::int AS "missedCalls",
+      SUM(CASE WHEN c.direction='inbound' AND (c.display_status='missed' OR c.duration_seconds=0) AND c.is_after_hours = false THEN 1 ELSE 0 END)::int AS "missedDuringHours",
+      SUM(CASE WHEN c.direction='inbound' AND (c.display_status='missed' OR c.duration_seconds=0) AND c.is_after_hours = true  THEN 1 ELSE 0 END)::int AS "missedAfterHours",
+      SUM(CASE WHEN c.direction='outbound' THEN 1 ELSE 0 END)::int AS "outboundCalls",
       AVG(g.overall_score)::float AS "averageGrade"
     FROM calls c
     LEFT JOIN call_grades g ON g.call_id = c.id

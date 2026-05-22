@@ -11,6 +11,9 @@ export interface TrendPoint {
   totalCalls: number;
   answeredCalls?: number;
   missedCalls?: number;
+  missedDuringHours?: number;
+  missedAfterHours?: number;
+  outboundCalls?: number;
   /** @nullable */
   averageGrade?: number | null;
 }

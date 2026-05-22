@@ -51,7 +51,11 @@ export async function refreshInboxForCall(callId: number): Promise<void> {
     return;
   }
 
-  const kind = isShopper(call) ? "shopper_no_followup" : "missed_no_callback";
+  const kind = isShopper(call)
+    ? "shopper_no_followup"
+    : call.isAfterHours
+      ? "missed_after_hours"
+      : "missed_no_callback";
 
   const [existing] = await db
     .select()
