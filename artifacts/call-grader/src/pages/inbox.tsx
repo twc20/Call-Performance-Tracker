@@ -49,13 +49,46 @@ export function InboxPage() {
         </p>
       </div>
 
-      <div className="grid gap-4">
-        {items.map((item) => (
-          <InboxCard key={item.id} item={item} onResolve={() => handleResolve(item.id)} />
+      <p className="text-xs text-muted-foreground">
+        Showing {items.length} unresolved {items.length === 1 ? "item" : "items"}, oldest first.
+      </p>
+
+      <div className="space-y-8">
+        {groupByDate(items).map(([date, group]) => (
+          <section key={date} className="space-y-3">
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+              {format(new Date(date + "T12:00:00"), "EEEE, MMM d, yyyy")}
+              <span className="ml-2 font-normal normal-case">({group.length})</span>
+            </h2>
+            <div className="grid gap-4">
+              {group.map((item) => (
+                <InboxCard key={item.id} item={item} onResolve={() => handleResolve(item.id)} />
+              ))}
+            </div>
+          </section>
         ))}
       </div>
     </div>
   );
+}
+
+function groupByDate(items: InboxItem[]): Array<[string, InboxItem[]]> {
+  const map = new Map<string, InboxItem[]>();
+  for (const item of items) {
+    // Use Mountain-time local date so late-night calls group with the operator's
+    // workday, matching how the backend buckets call_date.
+    const d = new Date(item.callDatetime);
+    const key = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "America/Denver",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(d);
+    const arr = map.get(key) ?? [];
+    arr.push(item);
+    map.set(key, arr);
+  }
+  return Array.from(map.entries());
 }
 
 function InboxCard({ item, onResolve }: { item: InboxItem; onResolve: () => void }) {

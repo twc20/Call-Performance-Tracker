@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { and, desc, eq, sql } from "drizzle-orm";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { db, calls, callGrades, inboxItems } from "@workspace/db";
 import { ResolveInboxItemBody } from "@workspace/api-zod";
 
@@ -7,11 +7,16 @@ const router: IRouter = Router();
 
 router.get("/inbox", async (req, res) => {
   const filters = [] as any[];
-  if (!req.query["includeResolved"] || req.query["includeResolved"] === "false") {
-    filters.push(eq(inboxItems.resolved, false));
-  }
+  const includeResolved = req.query["includeResolved"] === "true";
+  if (!includeResolved) filters.push(eq(inboxItems.resolved, false));
   if (req.query["date"]) filters.push(eq(inboxItems.callDate, String(req.query["date"])));
   if (req.query["store"]) filters.push(eq(calls.storeName, String(req.query["store"])));
+
+  // For the unresolved backlog, surface the OLDEST overdue items first — they're
+  // the most urgent. For resolved/all views, newest first.
+  const order = includeResolved
+    ? [desc(inboxItems.resolved), desc(calls.callDatetime)]
+    : [asc(calls.callDatetime)];
 
   const rows = await db
     .select({ item: inboxItems, call: calls, grade: callGrades })
@@ -19,8 +24,8 @@ router.get("/inbox", async (req, res) => {
     .innerJoin(calls, eq(calls.id, inboxItems.callId))
     .leftJoin(callGrades, eq(callGrades.callId, calls.id))
     .where(filters.length ? and(...filters) : undefined)
-    .orderBy(desc(inboxItems.resolved), desc(calls.callDatetime))
-    .limit(200);
+    .orderBy(...order)
+    .limit(1000);
 
   res.json(
     rows.map((r) => ({
