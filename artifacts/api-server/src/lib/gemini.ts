@@ -14,7 +14,7 @@ export function getGeminiClient(): GoogleGenAI {
     throw new Error("Gemini integration is not configured (missing env vars).");
   }
   if (!cached) {
-    cached = new GoogleGenAI({ apiKey, httpOptions: { baseUrl } });
+    cached = new GoogleGenAI({ apiKey, httpOptions: { apiVersion: "", baseUrl } });
   }
   return cached;
 }

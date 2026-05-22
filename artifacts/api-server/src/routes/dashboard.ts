@@ -26,9 +26,12 @@ router.get("/dashboard/summary", async (req, res) => {
         ${from ? sql`AND c.call_date >= ${from}` : sql``}
         ${to ? sql`AND c.call_date <= ${to}` : sql``}
     ),
+    -- "Actionable" cohorts exclude rows with unknown phones because we can't
+    -- cross-reference an unknown caller against any outbound callback.
     shoppers AS (
       SELECT f.* FROM filtered f
       WHERE f.direction = 'inbound' AND f.display_status = 'answered' AND f.duration_seconds >= 20
+        AND f.customer_phone <> 'unknown'
     ),
     shoppers_with_callback AS (
       SELECT DISTINCT s.id FROM shoppers s
@@ -40,6 +43,7 @@ router.get("/dashboard/summary", async (req, res) => {
     missed AS (
       SELECT f.* FROM filtered f
       WHERE f.direction = 'inbound' AND (f.display_status = 'missed' OR f.duration_seconds = 0)
+        AND f.customer_phone <> 'unknown'
     ),
     missed_with_callback AS (
       SELECT DISTINCT m.id FROM missed m
@@ -125,6 +129,7 @@ router.get("/dashboard/store-breakdown", async (req, res) => {
       SELECT c.store_name, c.id, c.customer_phone, c.call_date, c.call_datetime
       FROM calls c
       WHERE c.direction = 'inbound' AND c.display_status='answered' AND c.duration_seconds >= 20
+        AND c.customer_phone <> 'unknown'
         ${from ? sql`AND c.call_date >= ${from}` : sql``}
         ${to ? sql`AND c.call_date <= ${to}` : sql``}
     ),

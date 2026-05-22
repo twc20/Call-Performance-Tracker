@@ -19,35 +19,60 @@ export function isSyncRunning(): boolean {
   return running;
 }
 
+// Mark any sync_runs row left as 'running' from a prior process as an orphan failure.
+export async function reapOrphanSyncRuns(): Promise<void> {
+  const orphans = await db
+    .update(syncRuns)
+    .set({
+      status: "error",
+      finishedAt: new Date(),
+      message: "Process restarted before sync completed",
+    })
+    .where(eq(syncRuns.status, "running"))
+    .returning({ id: syncRuns.id });
+  if (orphans.length > 0) {
+    logger.warn({ count: orphans.length, ids: orphans.map((o) => o.id) }, "Reaped orphan sync runs");
+  }
+}
+
 async function upsertStore(name: string, brand: string | null): Promise<number> {
-  const [existing] = await db.select().from(stores).where(eq(stores.name, name)).limit(1);
-  if (existing) return existing.id;
-  const [created] = await db.insert(stores).values({ name, brand }).returning();
-  return created!.id;
+  const [row] = await db
+    .insert(stores)
+    .values({ name, brand })
+    .onConflictDoUpdate({
+      target: stores.name,
+      set: { name: sql`excluded.name` },
+    })
+    .returning({ id: stores.id });
+  return row!.id;
 }
 
 async function upsertEmployee(name: string, storeId: number | null): Promise<number> {
-  const [existing] = await db.select().from(employees).where(eq(employees.name, name)).limit(1);
-  if (existing) {
-    if (storeId && !existing.storeId) {
-      await db.update(employees).set({ storeId }).where(eq(employees.id, existing.id));
-    }
-    return existing.id;
-  }
-  const [created] = await db.insert(employees).values({ name, storeId }).returning();
-  return created!.id;
+  const [row] = await db
+    .insert(employees)
+    .values({ name, storeId })
+    .onConflictDoUpdate({
+      target: employees.name,
+      set: storeId
+        ? { storeId: sql`COALESCE(${employees.storeId}, ${storeId})` }
+        : { name: sql`excluded.name` },
+    })
+    .returning({ id: employees.id });
+  return row!.id;
 }
 
 async function upsertCustomer(phone: string, name: string | null): Promise<number> {
-  const [existing] = await db.select().from(customers).where(eq(customers.phone, phone)).limit(1);
-  if (existing) {
-    if (name && !existing.name) {
-      await db.update(customers).set({ name }).where(eq(customers.id, existing.id));
-    }
-    return existing.id;
-  }
-  const [created] = await db.insert(customers).values({ phone, name }).returning();
-  return created!.id;
+  const [row] = await db
+    .insert(customers)
+    .values({ phone, name })
+    .onConflictDoUpdate({
+      target: customers.phone,
+      set: name
+        ? { name: sql`COALESCE(${customers.name}, ${name})` }
+        : { phone: sql`excluded.phone` },
+    })
+    .returning({ id: customers.id });
+  return row!.id;
 }
 
 function dateOnly(d: Date): string {
@@ -83,20 +108,28 @@ async function upsertCall(parsed: ParsedCall, fileId: string, filePath: string):
     updatedAt: new Date(),
   };
 
-  // Skip if already exists by sourceUid
-  const [existing] = await db
-    .select({ id: calls.id })
-    .from(calls)
-    .where(eq(calls.sourceUid, parsed.sourceUid))
-    .limit(1);
-  if (existing) return null;
-
-  const [row] = await db.insert(calls).values(values).returning({ id: calls.id });
-  return row!.id;
+  // Atomic idempotent insert: races between workers on the same source_uid
+  // resolve to "skipped" instead of throwing a unique-constraint failure.
+  const rows = await db
+    .insert(calls)
+    .values(values)
+    .onConflictDoNothing({ target: calls.sourceUid })
+    .returning({ id: calls.id });
+  return rows[0]?.id ?? null;
 }
 
+const SYNC_WINDOW_DAYS = Number(process.env.SYNC_WINDOW_DAYS ?? 30);
+
 export async function runSync(runId: number): Promise<void> {
-  if (running) return;
+  // Flip the in-process flag atomically so concurrent /sync/run requests can't
+  // both pass the isSyncRunning() check and create dueling runs.
+  if (running) {
+    await db
+      .update(syncRuns)
+      .set({ status: "error", finishedAt: new Date(), message: "Another sync was already running" })
+      .where(eq(syncRuns.id, runId));
+    return;
+  }
   running = true;
   let added = 0;
   let skipped = 0;
@@ -104,18 +137,22 @@ export async function runSync(runId: number): Promise<void> {
   let seen = 0;
 
   try {
-    logger.info({ runId }, "Sync starting");
-    const files = await walkJsonFiles(CALL_DRIVE_FOLDER_ID);
+    const sinceDate = new Date(Date.now() - SYNC_WINDOW_DAYS * 24 * 60 * 60 * 1000);
+    logger.info({ runId, sinceDate, windowDays: SYNC_WINDOW_DAYS }, "Sync starting");
+    const files = await walkJsonFiles(CALL_DRIVE_FOLDER_ID, {
+      sinceDate,
+      onProgress: (msg) => logger.info({ runId }, msg),
+    });
     seen = files.length;
     await db
       .update(syncRuns)
       .set({ filesSeen: seen, message: `Found ${seen} JSON files` })
       .where(eq(syncRuns.id, runId));
 
-    for (const file of files) {
+    const CONCURRENCY = Number(process.env.SYNC_CONCURRENCY ?? 4);
+    const processFile = async (file: (typeof files)[number]) => {
       try {
         const payload = await fetchJsonFile(file.id);
-        // Some dumps are arrays of multiple calls
         const items = Array.isArray(payload) ? payload : [payload];
         for (const item of items) {
           const parsed = parseCallJson(item, file.path);
@@ -139,13 +176,23 @@ export async function runSync(runId: number): Promise<void> {
         failed += 1;
         logger.warn({ err, file: file.path }, "Failed to ingest file");
       }
-      if ((added + failed) % 10 === 0) {
+      if ((added + failed) % 25 === 0) {
         await db
           .update(syncRuns)
           .set({ filesAdded: added, filesSkipped: skipped, filesFailed: failed })
           .where(eq(syncRuns.id, runId));
       }
-    }
+    };
+
+    let cursor = 0;
+    const workers = Array.from({ length: CONCURRENCY }, async () => {
+      while (true) {
+        const idx = cursor++;
+        if (idx >= files.length) return;
+        await processFile(files[idx]!);
+      }
+    });
+    await Promise.all(workers);
 
     // Grade what we just added — bounded so the sync completes in reasonable time.
     await db

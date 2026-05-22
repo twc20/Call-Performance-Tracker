@@ -1,6 +1,7 @@
 import app from "./app";
 import { logger } from "./lib/logger";
 import { seedDefaultRubric } from "./services/seedRubric";
+import { reapOrphanSyncRuns } from "./services/sync";
 
 const rawPort = process.env["PORT"];
 
@@ -24,4 +25,5 @@ app.listen(port, (err) => {
 
   logger.info({ port }, "Server listening");
   seedDefaultRubric().catch((e) => logger.error({ err: e }, "Failed to seed rubric"));
+  reapOrphanSyncRuns().catch((e) => logger.error({ err: e }, "Failed to reap orphan sync runs"));
 });

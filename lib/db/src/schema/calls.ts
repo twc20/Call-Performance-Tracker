@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
   index,
   integer,
@@ -50,6 +51,11 @@ export const calls = pgTable(
     index("calls_employee_idx").on(t.employeeName),
     index("calls_store_idx").on(t.storeName),
     index("calls_direction_idx").on(t.direction),
+    // Partial composite index supports the follow-up / inbox / dashboard
+    // callback joins. Excludes 'unknown' rows since they're never matched.
+    index("calls_callback_lookup_idx")
+      .on(t.customerPhone, t.callDate, t.direction, t.callDatetime)
+      .where(sql`${t.customerPhone} <> 'unknown'`),
   ],
 );
 

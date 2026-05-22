@@ -18,6 +18,8 @@ function isMissed(c: Call): boolean {
 // Returns true when there is an outbound call to the same phone on the same
 // local date that happened AFTER the inbound call.
 async function hasSameDayCallback(phone: string, callDate: string, after: Date): Promise<boolean> {
+  // Skip cross-reference for unknown phones — they'd false-match each other.
+  if (phone === "unknown") return false;
   const rows = await db
     .select({ id: calls.id })
     .from(calls)
@@ -37,7 +39,7 @@ export async function refreshInboxForCall(callId: number): Promise<void> {
   const [call] = await db.select().from(calls).where(eq(calls.id, callId));
   if (!call) return;
 
-  const candidate = isShopper(call) || isMissed(call);
+  const candidate = (isShopper(call) || isMissed(call)) && call.customerPhone !== "unknown";
   if (!candidate) {
     await db.delete(inboxItems).where(eq(inboxItems.callId, callId));
     return;

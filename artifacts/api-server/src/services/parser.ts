@@ -168,9 +168,12 @@ export function parseCallJson(payload: unknown, filePath: string): ParsedCall | 
     str(
       get(
         obj,
+        // Delta Tire / Podium dump fields (despite the misleading "name" suffix, these hold the phone)
+        "clean_customer_name",
+        "customer_name_phone",
         direction === "inbound" ? "from" : "to",
         direction === "inbound" ? "caller" : "callee",
-        direction === "inbound" ? "customer.phone" : "customer.phone",
+        "customer.phone",
         "customer_phone",
         "customerPhone",
         "phone",
@@ -179,7 +182,17 @@ export function parseCallJson(payload: unknown, filePath: string): ParsedCall | 
     ) ?? str(get(obj, "from", "to", "phone"));
 
   const customerName = str(
-    get(obj, "customer.name", "customerName", "caller_name", "callerName", "contact.name", "contactName"),
+    get(
+      obj,
+      "customer.name",
+      "customerName",
+      "caller_name",
+      "callerName",
+      "contact.name",
+      "contactName",
+      "customer_full_name",
+      "customer_first_name",
+    ),
   );
 
   const storeName =
@@ -217,7 +230,19 @@ export function parseCallJson(payload: unknown, filePath: string): ParsedCall | 
   );
 
   const callDatetime = parseDate(
-    get(obj, "datetime", "callDatetime", "call_datetime", "started_at", "startedAt", "timestamp", "date", "start_time", "startTime"),
+    get(
+      obj,
+      "call_datetime_iso_utc",
+      "datetime",
+      "callDatetime",
+      "call_datetime",
+      "started_at",
+      "startedAt",
+      "timestamp",
+      "date",
+      "start_time",
+      "startTime",
+    ),
   );
 
   const durationSeconds = parseDuration(
@@ -225,7 +250,7 @@ export function parseCallJson(payload: unknown, filePath: string): ParsedCall | 
   );
 
   const statusRaw =
-    (str(get(obj, "status", "outcome", "callStatus", "call_status", "disposition")) ?? "").toLowerCase();
+    (str(get(obj, "display_status", "status", "outcome", "callStatus", "call_status", "disposition")) ?? "").toLowerCase();
   let displayStatus = statusRaw || "answered";
   if (durationSeconds === 0 && direction === "inbound") displayStatus = displayStatus || "missed";
   if (statusRaw.includes("miss") || statusRaw === "no-answer" || statusRaw === "voicemail") {
@@ -233,13 +258,15 @@ export function parseCallJson(payload: unknown, filePath: string): ParsedCall | 
   }
   if (statusRaw.includes("answer") && !statusRaw.includes("no")) displayStatus = "answered";
 
-  const transcript = parseTranscript(get(obj, "transcript", "transcription", "transcript_text", "lines"));
+  const transcript = parseTranscript(
+    get(obj, "transcript_lines", "transcript", "transcription", "transcript_text", "lines"),
+  );
   const summary = parseSummary(
     get(obj, "summary", "ai_summary", "aiSummary", "call_summary", "callSummary", "notes"),
   );
 
   const sourceUid =
-    str(get(obj, "id", "call_id", "callId", "uid", "uuid", "external_id", "externalId", "recording_id")) ??
+    str(get(obj, "call_uid", "id", "call_id", "callId", "uid", "uuid", "external_id", "externalId", "recording_id", "recording_uid")) ??
     filePath;
 
   return {
