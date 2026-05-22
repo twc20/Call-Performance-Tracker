@@ -1,4 +1,4 @@
-import { useGetInbox, useResolveInboxItem, getGetInboxQueryKey } from "@workspace/api-client-react";
+import { useGetInbox, useResolveInboxItem, useListStores, getGetInboxQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import type { InboxItem } from "@workspace/api-client-react";
@@ -8,7 +8,16 @@ import { toast } from "sonner";
 import { Link } from "wouter";
 import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { EmptyState } from "@/components/empty-state";
+
+const ALL_STORES = "__all__";
 
 function todayInDenver(): string {
   return new Intl.DateTimeFormat("en-CA", {
@@ -56,10 +65,13 @@ const FILTER_OPTIONS: Array<{
 export function InboxPage() {
   const [from, setFrom] = useState<string>("");
   const [to, setTo] = useState<string>("");
+  const [storeSel, setStoreSel] = useState<string>(ALL_STORES);
+  const { data: storesList } = useListStores();
   const { data: items, isLoading, error } = useGetInbox({
     includeResolved: false,
     ...(from ? { from } : {}),
     ...(to ? { to } : {}),
+    ...(storeSel !== ALL_STORES ? { store: storeSel } : {}),
   });
   const resolve = useResolveInboxItem();
   const queryClient = useQueryClient();
@@ -112,9 +124,11 @@ export function InboxPage() {
   }, {});
 
   const dateFilterActive = Boolean(from || to);
+  const storeFilterActive = storeSel !== ALL_STORES;
+  const anyFilterActive = dateFilterActive || storeFilterActive;
   const totalLoaded = items?.length ?? 0;
-  const hasZeroFromFilter = !isLoading && dateFilterActive && totalLoaded === 0;
-  const isInboxZero = !isLoading && !dateFilterActive && totalLoaded === 0;
+  const hasZeroFromFilter = !isLoading && anyFilterActive && totalLoaded === 0;
+  const isInboxZero = !isLoading && !anyFilterActive && totalLoaded === 0;
 
   return (
     <div className="p-8 max-w-5xl mx-auto space-y-6">
@@ -127,6 +141,22 @@ export function InboxPage() {
 
       <div className="flex flex-col gap-3 p-4 bg-card border rounded-lg">
         <div className="flex flex-wrap items-end gap-3">
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-muted-foreground">Store</label>
+            <Select value={storeSel} onValueChange={setStoreSel}>
+              <SelectTrigger className="w-[220px]">
+                <SelectValue placeholder="All stores" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={ALL_STORES}>All stores</SelectItem>
+                {storesList?.map((s) => (
+                  <SelectItem key={s.name} value={s.name}>
+                    {s.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           <div className="space-y-1">
             <label className="text-xs font-medium text-muted-foreground">From</label>
             <Input
@@ -156,8 +186,11 @@ export function InboxPage() {
               type="button"
               variant="ghost"
               size="sm"
-              onClick={() => applyPreset("all")}
-              disabled={!dateFilterActive}
+              onClick={() => {
+                applyPreset("all");
+                setStoreSel(ALL_STORES);
+              }}
+              disabled={!anyFilterActive}
             >
               Clear
             </Button>
@@ -196,7 +229,7 @@ export function InboxPage() {
       <p className="text-xs text-muted-foreground">
         {isLoading
           ? "Loading inbox..."
-          : `Showing ${filtered.length} of ${totalLoaded} unresolved ${totalLoaded === 1 ? "item" : "items"}${dateFilterActive ? " in selected range" : ""}, newest first.`}
+          : `Showing ${filtered.length} of ${totalLoaded} unresolved ${totalLoaded === 1 ? "item" : "items"}${anyFilterActive ? " matching filters" : ""}, newest first.`}
       </p>
 
       {isInboxZero ? (
@@ -209,7 +242,7 @@ export function InboxPage() {
         />
       ) : hasZeroFromFilter ? (
         <div className="p-8 text-center text-sm text-muted-foreground border rounded-lg bg-card">
-          No unresolved items in the selected date range. Try widening the range or clearing the filter.
+          No unresolved items match the selected filters. Try widening the date range, picking a different store, or clearing the filter.
         </div>
       ) : filtered.length === 0 ? (
         <div className="p-8 text-center text-sm text-muted-foreground border rounded-lg bg-card">
