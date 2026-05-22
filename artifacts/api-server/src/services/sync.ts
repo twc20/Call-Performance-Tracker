@@ -131,7 +131,8 @@ async function upsertCall(parsed: ParsedCall, fileId: string, filePath: string):
 
 const SYNC_WINDOW_DAYS = Number(process.env.SYNC_WINDOW_DAYS ?? 30);
 
-export async function runSync(runId: number): Promise<void> {
+export async function runSync(runId: number, opts: { fullBackfill?: boolean } = {}): Promise<void> {
+  const fullBackfill = opts.fullBackfill === true;
   // Flip the in-process flag atomically so concurrent /sync/run requests can't
   // both pass the isSyncRunning() check and create dueling runs.
   if (running) {
@@ -148,10 +149,15 @@ export async function runSync(runId: number): Promise<void> {
   let seen = 0;
 
   try {
-    const sinceDate = new Date(Date.now() - SYNC_WINDOW_DAYS * 24 * 60 * 60 * 1000);
-    logger.info({ runId, sinceDate, windowDays: SYNC_WINDOW_DAYS }, "Sync starting");
+    const sinceDate = fullBackfill
+      ? undefined
+      : new Date(Date.now() - SYNC_WINDOW_DAYS * 24 * 60 * 60 * 1000);
+    logger.info(
+      { runId, sinceDate, windowDays: fullBackfill ? "ALL" : SYNC_WINDOW_DAYS, fullBackfill },
+      "Sync starting",
+    );
     const files = await walkJsonFiles(CALL_DRIVE_FOLDER_ID, {
-      sinceDate,
+      ...(sinceDate ? { sinceDate } : {}),
       onProgress: (msg) => logger.info({ runId }, msg),
     });
     seen = files.length;
@@ -216,7 +222,10 @@ export async function runSync(runId: number): Promise<void> {
       })
       .where(eq(syncRuns.id, runId));
 
-    const { graded, failed: gradeFailed } = await gradePending(50);
+    // Full backfills grade aggressively so historical calls get scored in one go;
+    // routine syncs stay bounded so a typical run completes quickly.
+    const gradeCap = fullBackfill ? 10_000 : 50;
+    const { graded, failed: gradeFailed } = await gradePending(gradeCap);
 
     await db
       .update(syncRuns)

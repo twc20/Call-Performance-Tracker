@@ -26,13 +26,17 @@ router.post("/sync/run", async (req, res) => {
     res.status(202).json({ started: false, runId: last?.id ?? 0 });
     return;
   }
-  const [run] = await db.insert(syncRuns).values({ status: "running" }).returning();
+  const fullBackfill = req.query["full"] === "true" || req.body?.full === true;
+  const [run] = await db
+    .insert(syncRuns)
+    .values({ status: "running", message: fullBackfill ? "Full backfill starting…" : null })
+    .returning();
   if (!run) {
     res.status(500).json({ error: "Failed to start sync" });
     return;
   }
-  void runSync(run.id).catch((err) => req.log.error({ err }, "Sync run failed"));
-  res.status(202).json({ started: true, runId: run.id });
+  void runSync(run.id, { fullBackfill }).catch((err) => req.log.error({ err }, "Sync run failed"));
+  res.status(202).json({ started: true, runId: run.id, fullBackfill });
 });
 
 // Re-grade a single call (re-runs Gemini against the current rubric)
