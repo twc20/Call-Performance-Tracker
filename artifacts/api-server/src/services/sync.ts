@@ -94,8 +94,16 @@ async function upsertCall(parsed: ParsedCall, fileId: string, filePath: string):
   const employeeId = parsed.employeeName ? await upsertEmployee(parsed.employeeName, storeId) : null;
   const customerId = await upsertCustomer(parsed.customerPhone, parsed.customerName);
 
+  // Use the Drive file ID as the source_uid whenever we have one. The Drive
+  // file ID is the only truly stable identifier per JSON file — earlier we
+  // derived source_uid from the JSON payload, which could drift across
+  // ingestion runs (e.g. timestamp precision changes) and let the same Drive
+  // file be inserted twice. Falling back to the JSON-derived uid only when
+  // no fileId is available preserves behavior for any legacy code paths.
+  const stableUid = fileId ? `drive:${fileId}` : parsed.sourceUid;
+
   const values = {
-    sourceUid: parsed.sourceUid,
+    sourceUid: stableUid,
     sourceFileId: fileId,
     sourcePath: filePath,
     storeId,
